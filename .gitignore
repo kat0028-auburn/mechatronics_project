@@ -11,3 +11,41 @@ CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
 build/
+
+
+# PlatformIO build files
+.pio/
+.pioenvs/
+.piolibdeps/
+.vscode/
+
+# Compiled binary and firmware files
+*.elf
+*.hex
+*.bin
+*.map
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Misc IDE/project files
+.DS_Store
+*.swp
+*.swo
+*.bak
+*.orig
+.idea/
+*.code-workspace
+
+# PlatformIO auto-generated files
+*.ini.bak
+*.tmp
+
+# Logs
+*.log
+
+# Optional: ignore platformio's lib symlinks (if not using git submodules)
+lib/
+
