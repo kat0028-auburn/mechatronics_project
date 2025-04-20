@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <HCSR04.h>
-#include <Stepper.h>
 #include <string>
 
 const int sonar_trigger_1 = 9;
@@ -18,7 +17,6 @@ const int stepper_right_1 = 15;
 const int stepper_right_2 = 16;
 const int stepper_right_3 = 17;
 const int stepper_right_4 = 18;
-const int steps = 2048;
 
 // Create an HCSR04 object (trigger pin, echo pin)
 UltraSonicDistanceSensor sonar_1(sonar_trigger_1, sonar_echo_1);
@@ -29,11 +27,7 @@ double distance_2;
 double distance_3;
 std::string range_csv;
 
-Stepper stepper_left(steps, stepper_left_1, stepper_left_2, stepper_left_3, stepper_left_4);
-Stepper stepper_right(steps, stepper_right_1, stepper_right_2, stepper_right_3, stepper_right_4);
 std::string motor_csv;
-int left_steps;
-int right_steps;
 int left_step_number = 0;
 int right_step_number = 0;
 
@@ -42,24 +36,25 @@ void runMotors();
 void oneStep(bool dir, const int& pin1, const int& pin2, const int& pin3, const int& pin4);
 void oneStepLeft(bool dir);
 void oneStepRight(bool dir);
+void clearSteppers();
 bool checkValidMeasurement(const double& distance);
 
 void setup() {
   Serial.begin(115200);
   Serial.setTimeout(1);
   pinMode(13, OUTPUT);
+  pinMode(stepper_left_1, OUTPUT);
+  pinMode(stepper_left_2, OUTPUT);
+  pinMode(stepper_left_3, OUTPUT);
+  pinMode(stepper_left_4, OUTPUT);
+  pinMode(stepper_right_1, OUTPUT);
+  pinMode(stepper_right_2, OUTPUT);
+  pinMode(stepper_right_3, OUTPUT);
+  pinMode(stepper_right_4, OUTPUT);
 }
 
-int loop_counter = 0;
-int loop_cycle = 50;
-
-void loop() {
-  loop_counter++;
-  if (loop_counter >= loop_cycle)
-  {
-    runSonars(); 
-    loop_counter = 0;
-  }
+void loop() {  
+  runSonars(); 
   runMotors(); 
 }
 
@@ -82,53 +77,69 @@ bool checkValidMeasurement(const double& distance)
 
 void runMotors()
 {
+  clearSteppers();
   if(Serial.available())
   {
-    digitalWrite(13, HIGH);
-    delay(500);
-    digitalWrite(13, LOW);
-    delay(500);
+    // digitalWrite(13, HIGH);
+    // delay(500);
+    // digitalWrite(13, LOW);
+    // delay(500);
 
+    //String message = Serial.readStringUntil('\n');
     String message = Serial.readString();
-    char buf[message.length() + 1];
-    message.toCharArray(buf, sizeof(buf));
-    
-    char mode[1];
-    mode[0] = buf[message.length()-1];
-    int drive_mode = std::atoi(mode);
-    Serial.println(drive_mode);
+    int drive_mode;
+    int drive_value;
+
+    message.trim();
+    int comma_index = message.indexOf(',');
+    if (comma_index != -1)
+    {
+      String part1 = message.substring(0, comma_index);
+      String part2 = message.substring(comma_index+1);
+
+      drive_mode = part1.toInt();
+      drive_value = part2.toInt();
+    }
+    else
+    {
+      drive_mode = 0;
+    }
+
     if (drive_mode == 1)
     {
-      char value[1];
-      value[0] = buf[message.length()-3];
-      int drive_value = std::atoi(value);
-      Serial.println(drive_value);
       for (int i = 0; i < drive_value; ++i)
       {
         oneStepLeft(true);
         oneStepRight(false);  
+        delay(2);
       }
     }
     else if (drive_mode == 2)
     {
-      char value[1];
-      value[0] = buf[message.length()-3];
-      int drive_value = std::atoi(value);
       for (int i = 0; i < drive_value; ++i)
       {
         oneStepLeft(false);
         oneStepRight(true);
+        delay(2);
       }
     }
     else if (drive_mode == 3)
     {
-      oneStepLeft(false);
-      oneStepRight(false);
+      for (int i = 0; i < drive_value; ++i)
+      {
+        oneStepLeft(false);
+        oneStepRight(false);
+        delay(2);
+      }
     }
     else if (drive_mode == 4)
     {
-      oneStepLeft(true);
-      oneStepRight(true);
+      for (int i = 0; i < drive_value; ++i)
+      {
+        oneStepLeft(true);
+        oneStepRight(true);
+        delay(2);
+      }
     }
   }
 }
@@ -198,7 +209,6 @@ void oneStepLeft(bool dir){
   if (left_step_number > 3){
     left_step_number = 0;
   }
-  delay(2);
 }
 
 void oneStepRight(bool dir){
@@ -266,4 +276,19 @@ void oneStepRight(bool dir){
   if (right_step_number > 3){
     right_step_number = 0;
   }
+}
+
+void clearSteppers()
+{
+  digitalWrite(stepper_left_1, LOW);
+  digitalWrite(stepper_left_2, LOW);
+  digitalWrite(stepper_left_3, LOW);
+  digitalWrite(stepper_left_4, LOW);
+  digitalWrite(stepper_right_1, LOW);
+  digitalWrite(stepper_right_2, LOW);
+  digitalWrite(stepper_right_3, LOW);
+  digitalWrite(stepper_right_4, LOW);
+
+  left_step_number = 0;
+  right_step_number = 0;
 }

@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include <geometry_msgs/Vector3.h>
+#include <hardware_serial_interface/StepperArray.h>
 #include <hardware_serial_interface/SonarArray.h>
 #include <serial/serial.h>
 #include <sstream>
@@ -20,8 +20,9 @@ class HardwareSerialInterfaceNode
 
     serial::Serial* port;
     std::string motor_cmd_msg;
+    bool pause_serial_writer;
 
-    void stepperCallback(const geometry_msgs::Vector3::ConstPtr &msg);
+    void stepperCallback(const hardware_serial_interface::StepperArray::ConstPtr &msg);
 };
 
 HardwareSerialInterfaceNode::HardwareSerialInterfaceNode()
@@ -32,6 +33,7 @@ HardwareSerialInterfaceNode::HardwareSerialInterfaceNode()
     std::string stepper_topic;
     std::string portname;
     int baudrate;
+    pause_serial_writer = true;
 
     motor_cmd_msg = "0";
 
@@ -51,22 +53,16 @@ HardwareSerialInterfaceNode::~HardwareSerialInterfaceNode()
     delete this->port;
 }
 
-void HardwareSerialInterfaceNode::stepperCallback(const geometry_msgs::Vector3::ConstPtr &msg)
+void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interface::StepperArray::ConstPtr &msg)
 {
     //motor_cmd_msg = std::to_string(msg->data);
-    if (round(msg->x) == 1)
+    checkPort();
+    if (!pause_serial_writer)
     {
-        motor_cmd_msg = std::to_string((int)round(msg->y)) + "," + std::to_string((int)round(msg->x));
+        motor_cmd_msg = std::to_string(msg->mode) + "," + std::to_string(msg->steps);
+        port->write(motor_cmd_msg);
+        pause_serial_writer = true;
     }
-    else if(msg->x == 2)
-    {
-        motor_cmd_msg = std::to_string((int)round(msg->y)) + "," + std::to_string((int)round(msg->x));
-    }
-    else
-    {
-        motor_cmd_msg = std::to_string((int)round(msg->x));
-    }
-    port->write(motor_cmd_msg);
 }
 
 void HardwareSerialInterfaceNode::checkPort()
@@ -78,12 +74,17 @@ void HardwareSerialInterfaceNode::checkPort()
         std::vector<std::string> result;
         boost::split(result, in_msg, boost::is_any_of(","));
         
-        hardware_serial_interface::SonarArray msg;
-        msg.header.stamp = ros::Time::now();
-        msg.sonar_front = std::stof(result.at(0).c_str());
-        msg.sonar_left = std::stof(result.at(1).c_str());
-        msg.sonar_right = std::stof(result.at(2).c_str());
-        this->sonar_array_pub.publish(msg);
+        if (result.size() > 2)
+        {    
+            hardware_serial_interface::SonarArray msg;
+            msg.header.stamp = ros::Time::now();
+            msg.sonar_front = std::stof(result.at(0).c_str());
+            msg.sonar_left = std::stof(result.at(1).c_str());
+            msg.sonar_right = std::stof(result.at(2).c_str());
+            this->sonar_array_pub.publish(msg);
+
+            pause_serial_writer = false;
+        }
     }
     //this->port->write(this->motor_cmd_msg);
 }
