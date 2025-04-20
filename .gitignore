@@ -50,3 +50,5 @@ __pycache__/
 lib/
 
 .vscode
+main_ws/build
+main_ws/devel

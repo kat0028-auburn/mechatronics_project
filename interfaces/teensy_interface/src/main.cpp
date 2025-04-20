@@ -34,11 +34,14 @@ Stepper stepper_right(steps, stepper_right_1, stepper_right_2, stepper_right_3, 
 std::string motor_csv;
 int left_steps;
 int right_steps;
-int step_number = 0;
+int left_step_number = 0;
+int right_step_number = 0;
 
 void runSonars();
 void runMotors();
 void oneStep(bool dir, const int& pin1, const int& pin2, const int& pin3, const int& pin4);
+void oneStepLeft(bool dir);
+void oneStepRight(bool dir);
 bool checkValidMeasurement(const double& distance);
 
 void setup() {
@@ -47,14 +50,22 @@ void setup() {
   pinMode(13, OUTPUT);
 }
 
+int loop_counter = 0;
+int loop_cycle = 50;
+
 void loop() {
-  //runSonars(); 
+  loop_counter++;
+  if (loop_counter >= loop_cycle)
+  {
+    runSonars(); 
+    loop_counter = 0;
+  }
   runMotors(); 
 }
 
 void runSonars()
 {
-  distance_1 = sonar_1.measureDistanceCm();  // Returns distance in centimeters
+  distance_1 = sonar_1.measureDistanceCm();  
   distance_2 = sonar_2.measureDistanceCm();
   distance_3 = sonar_3.measureDistanceCm();
 
@@ -81,45 +92,54 @@ void runMotors()
     String message = Serial.readString();
     char buf[message.length() + 1];
     message.toCharArray(buf, sizeof(buf));
-
-    char *token = strtok(buf, ",");
-    int index = 0;
-    int values[2];
-
-    while (token != nullptr && index < 2)
-    {
-      values[index++] = atoi(token);
-      token=strtok(nullptr, ",");
-    }
-
-    left_steps = values[0];
-    right_steps = values[1];
-
-    int left_counter = 0;
-    int right_counter = 0;
-    bool left_dir = (left_steps > 0);
-    bool right_dir = !(right_steps > 0);
-    bool left_turning = true;
-    bool right_turning = true;
-
-    Serial.println(left_steps);
     
-    for (int i = 0; i < abs(left_steps); i++)
+    char mode[1];
+    mode[0] = buf[message.length()-1];
+    int drive_mode = std::atoi(mode);
+    Serial.println(drive_mode);
+    if (drive_mode == 1)
     {
-      oneStep(left_dir, stepper_left_1, stepper_left_2, stepper_left_3, stepper_left_4);
-      delay(2);
+      char value[1];
+      value[0] = buf[message.length()-3];
+      int drive_value = std::atoi(value);
+      Serial.println(drive_value);
+      for (int i = 0; i < drive_value; ++i)
+      {
+        oneStepLeft(true);
+        oneStepRight(false);  
+      }
     }
-    for (int i = 0; i < abs(right_steps); i++)
+    else if (drive_mode == 2)
     {
-      oneStep(right_dir, stepper_right_1, stepper_right_2, stepper_right_3, stepper_right_4);
-      delay(2);
+      char value[1];
+      value[0] = buf[message.length()-3];
+      int drive_value = std::atoi(value);
+      for (int i = 0; i < drive_value; ++i)
+      {
+        oneStepLeft(false);
+        oneStepRight(true);
+      }
+    }
+    else if (drive_mode == 3)
+    {
+      oneStepLeft(false);
+      oneStepRight(false);
+    }
+    else if (drive_mode == 4)
+    {
+      oneStepLeft(true);
+      oneStepRight(true);
     }
   }
 }
 
-void oneStep(bool dir, const int& pin1, const int& pin2, const int& pin3, const int& pin4){
+void oneStepLeft(bool dir){
+  const int pin1 = stepper_left_1;
+  const int pin2 = stepper_left_2;
+  const int pin3 = stepper_left_3;
+  const int pin4 = stepper_left_4;
   if (dir){
-    switch(step_number){
+    switch(left_step_number){
       case 0: 
       digitalWrite(pin1, HIGH);
       digitalWrite(pin2, LOW);
@@ -147,7 +167,7 @@ void oneStep(bool dir, const int& pin1, const int& pin2, const int& pin3, const 
     }
   }
   else{
-    switch(step_number){
+    switch(left_step_number){
       case 0: 
       digitalWrite(pin1, LOW);
       digitalWrite(pin2, LOW);
@@ -174,8 +194,76 @@ void oneStep(bool dir, const int& pin1, const int& pin2, const int& pin3, const 
       break;
     }
   }
-  step_number++;
-  if (step_number > 3){
-    step_number = 0;
+  left_step_number++;
+  if (left_step_number > 3){
+    left_step_number = 0;
+  }
+  delay(2);
+}
+
+void oneStepRight(bool dir){
+  const int pin1 = stepper_right_1;
+  const int pin2 = stepper_right_2;
+  const int pin3 = stepper_right_3;
+  const int pin4 = stepper_right_4;
+  if (dir){
+    switch(right_step_number){
+      case 0: 
+      digitalWrite(pin1, HIGH);
+      digitalWrite(pin2, LOW);
+      digitalWrite(pin3, LOW);
+      digitalWrite(pin4, LOW);
+      break;
+      case 1:
+      digitalWrite(pin1, LOW);
+      digitalWrite(pin2, HIGH);
+      digitalWrite(pin3, LOW);
+      digitalWrite(pin4, LOW);
+      break;
+      case 2:
+      digitalWrite(pin1, LOW);
+      digitalWrite(pin2, LOW);
+      digitalWrite(pin3, HIGH);
+      digitalWrite(pin4, LOW);
+      break;
+      case 3:
+      digitalWrite(pin1, LOW);
+      digitalWrite(pin2, LOW);
+      digitalWrite(pin3, LOW);
+      digitalWrite(pin4, HIGH);
+      break;
+    }
+  }
+  else{
+    switch(right_step_number){
+      case 0: 
+      digitalWrite(pin1, LOW);
+      digitalWrite(pin2, LOW);
+      digitalWrite(pin3, LOW);
+      digitalWrite(pin4, HIGH);
+      break;
+      case 1:
+      digitalWrite(pin1, LOW);
+      digitalWrite(pin2, LOW);
+      digitalWrite(pin3, HIGH);
+      digitalWrite(pin4, LOW);
+      break;
+      case 2:
+      digitalWrite(pin1, LOW);
+      digitalWrite(pin2, HIGH);
+      digitalWrite(pin3, LOW);
+      digitalWrite(pin4, LOW);
+      break;
+      case 3:
+      digitalWrite(pin1, HIGH);
+      digitalWrite(pin2, LOW);
+      digitalWrite(pin3, LOW);
+      digitalWrite(pin4, LOW);
+      break;
+    }
+  }
+  right_step_number++;
+  if (right_step_number > 3){
+    right_step_number = 0;
   }
 }

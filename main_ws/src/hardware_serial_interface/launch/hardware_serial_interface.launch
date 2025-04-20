@@ -1,0 +1,5 @@
+<launch>
+    <node name="hardware_serial_interface" pkg="hardware_serial_interface" type="hardware_serial_interface_node" output="screen">
+        <rosparam file="$(find hardware_serial_interface)/config/params.yaml" command="load"/>
+    </node>
+</launch>
