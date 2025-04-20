@@ -1,4 +1,4 @@
-sonar_topic: "sonar_array"
-stepper_topic: "stepper_mode"
+sonar_topic: "/sonar_array"
+stepper_topic: "/stepper_array"
 portname: "/dev/ttyACM0"
 baudrate: 115200

@@ -1,0 +1,2 @@
+sonar_topic: "/sonar_array"
+motor_topic: "/stepper_array"
