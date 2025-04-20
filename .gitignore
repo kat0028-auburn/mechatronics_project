@@ -49,3 +49,4 @@ __pycache__/
 # Optional: ignore platformio's lib symlinks (if not using git submodules)
 lib/
 
+.vscode
