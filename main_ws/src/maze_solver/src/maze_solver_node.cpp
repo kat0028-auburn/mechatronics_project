@@ -70,7 +70,7 @@ void MazeSolverNode::goForward()
 {
     hardware_serial_interface::StepperArray stepper_msg;
     stepper_msg.mode = 1;
-    stepper_msg.steps = 20;
+    stepper_msg.steps = 50;
     stepper_msg.header.stamp = ros::Time::now();
     motor_pub.publish(stepper_msg);
 }
