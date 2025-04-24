@@ -51,6 +51,8 @@ void setup() {
   pinMode(stepper_right_2, OUTPUT);
   pinMode(stepper_right_3, OUTPUT);
   pinMode(stepper_right_4, OUTPUT);
+
+  clearSteppers();
 }
 
 void loop() {  
@@ -111,7 +113,7 @@ void runMotors()
       {
         oneStepLeft(true);
         oneStepRight(false);  
-        delay(2);
+        delay(5);
       }
     }
     else if (drive_mode == 2)
@@ -120,7 +122,7 @@ void runMotors()
       {
         oneStepLeft(false);
         oneStepRight(true);
-        delay(2);
+        delay(5);
       }
     }
     else if (drive_mode == 3)
@@ -129,7 +131,7 @@ void runMotors()
       {
         oneStepLeft(false);
         oneStepRight(false);
-        delay(2);
+        delay(5);
       }
     }
     else if (drive_mode == 4)
@@ -138,7 +140,7 @@ void runMotors()
       {
         oneStepLeft(true);
         oneStepRight(true);
-        delay(2);
+        delay(5);
       }
     }
   }

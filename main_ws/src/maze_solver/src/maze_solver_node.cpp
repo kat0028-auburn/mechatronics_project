@@ -40,23 +40,12 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     std::cout << msg->sonar_front << ", " << msg->sonar_left << ", " << msg->sonar_right << std::endl;
     hardware_serial_interface::StepperArray stepper_msg;
 
-    if (msg->sonar_front > 20)
-    {
-        stepper_msg.header.stamp = ros::Time::now();
-        stepper_msg.mode = 1;
-        stepper_msg.steps = 20;    
-    }
-    else
-    {
-        stepper_msg.header.stamp = ros::Time::now();
-        stepper_msg.mode = 0;
-        stepper_msg.steps = 0;
-    }
-    motor_pub.publish(stepper_msg);
-
     if (msg->sonar_left > 20)
     {
         std::cout << "left-clear, ";
+        stepper_msg.header.stamp = ros::Time::now();
+        stepper_msg.mode = 3;
+        stepper_msg.steps = 200;
     }
     else
     {
@@ -66,11 +55,29 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     if (msg->sonar_right > 20)
     {
         std::cout << "right-clear" << std::endl;
+        stepper_msg.header.stamp = ros::Time::now();
+        stepper_msg.mode = 4;
+        stepper_msg.steps = 200;
     }
     else 
     {
         std::cout << "right-blocked" << std::endl;
     }
+
+    if (msg->sonar_front > 20)
+    {
+        stepper_msg.header.stamp = ros::Time::now();
+        stepper_msg.mode = 1;
+        stepper_msg.steps = 20;    
+    }
+    // else
+    // {
+    //     stepper_msg.header.stamp = ros::Time::now();
+    //     stepper_msg.mode = 0;
+    //     stepper_msg.steps = 0;
+    // }
+
+    motor_pub.publish(stepper_msg);
 }
 
 int main(int argc, char **argv)
