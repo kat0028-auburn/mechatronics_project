@@ -48,12 +48,12 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
         stepper_msg.mode = 1;
         stepper_msg.steps = 20;
     }
-    else if (msg->sonar_left > 20)
-    {
-        stepper_msg.mode = 3;
-        stepper_msg.steps = turn_steps;
-    }
-    if(msg->sonar_right > 20)
+    //else if (msg->sonar_left > 20)
+    //{
+    //    stepper_msg.mode = 3;
+    //    stepper_msg.steps = turn_steps;
+    //}
+    else if(msg->sonar_right > 20)
     {
         stepper_msg.mode = 4;
         stepper_msg.steps = turn_steps;
