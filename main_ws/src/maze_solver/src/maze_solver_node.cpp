@@ -66,6 +66,10 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     {
         turnRight();
     }
+    else 
+    {
+        turnAround();
+    }
 }
 
 void MazeSolverNode::goForward()
