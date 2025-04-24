@@ -2,4 +2,4 @@ sonar_topic: "/sonar_array"
 motor_topic: "/stepper_array"
 side_tolerance: 15
 front_tolerance: 40
-turn_steps: 2000
+turn_steps: 1150

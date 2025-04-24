@@ -56,14 +56,21 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
 
     if (msg->sonar_front > front_tolerance)
     {
+        std::cout<<"FRONT: "<<std::endl;
+        std::cout<<msg->sonar_front<<", "<<front_tolerance<<std::endl;
+
         goForward();
     }
     else if (msg->sonar_left > side_tolerance)
     {
+        std::cout<<"LEFT: "<<std::endl;
+        std::cout<<msg->sonar_left << ", " << side_tolerance<<std::endl;
         turnLeft();
     }
     else if(msg->sonar_right > side_tolerance)
     {
+        std::cout<<"RIGHT: "<<std::endl;
+        std::cout<<msg->sonar_right<<", "<<side_tolerance<<std::endl;
         turnRight();
     }
 }
