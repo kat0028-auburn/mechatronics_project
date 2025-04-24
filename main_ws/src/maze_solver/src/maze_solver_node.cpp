@@ -27,7 +27,7 @@ MazeSolverNode::MazeSolverNode()
 
     this->n.param<std::string>("sonar_topic", sonar_topic, "sonar");
     this->n.param<std::string>("motor_topic", motor_topic, "motor");
-    this->n.param<int>("turn_steps", turn_steps, 1190);
+    this->n.param<int>("turn_steps", turn_steps, 1175);
 
     this->sonar_sub = this->n.subscribe(sonar_topic, 1, &MazeSolverNode::sonarCallback, this);
     this->motor_pub = this->n.advertise<hardware_serial_interface::StepperArray>(motor_topic, 1);
