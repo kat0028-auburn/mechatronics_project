@@ -63,6 +63,12 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
         std::cout << motor_cmd_msg << std::endl;
         port->write(motor_cmd_msg);
         pause_serial_writer = true;
+
+        // Clear any sonar messages
+        while (port->available())
+        {
+            std::string dump = port->readline();
+        }
     }
 }
 
