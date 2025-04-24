@@ -27,7 +27,7 @@ MazeSolverNode::MazeSolverNode()
 
     this->n.param<std::string>("sonar_topic", sonar_topic, "sonar");
     this->n.param<std::string>("motor_topic", motor_topic, "motor");
-    this->n.param<int>("turn_steps", turn_steps, 1175);
+    this->n.param<int>("turn_steps", turn_steps, 1170);
 
     this->sonar_sub = this->n.subscribe(sonar_topic, 1, &MazeSolverNode::sonarCallback, this);
     this->motor_pub = this->n.advertise<hardware_serial_interface::StepperArray>(motor_topic, 1);
@@ -48,7 +48,7 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
         stepper_msg.mode = 1;
         stepper_msg.steps = 20;
     }
-    else if (msg->sonar_right > 20)
+    else if (msg->sonar_left > 20)
     {
         stepper_msg.mode = 3;
         stepper_msg.steps = turn_steps;
