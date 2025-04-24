@@ -115,7 +115,7 @@ void MazeSolverNode::turnAround()
     {
         hardware_serial_interface::StepperArray stepper_msg;
         stepper_msg.mode = 3;
-        stepper_msg.steps = turn_steps;
+        stepper_msg.steps = turn_steps*2;
         stepper_msg.header.stamp = ros::Time::now();
         motor_pub.publish(stepper_msg);
         turn_cooldown = 3;
