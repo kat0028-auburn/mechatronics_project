@@ -71,7 +71,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "openloop_motor_commands");
     OpenloopMotorCommandsNode node;
     ros::Rate loop_rate(10);
-    while (!node.send_message && ros::ok())
+    /* while (!node.send_message && ros::ok())
     {
         loop_rate.sleep();
         ros::spinOnce();
@@ -83,6 +83,9 @@ int main(int argc, char **argv)
     
     msg.steps = 1150 * 8;
     msg.mode = 4;
+    node.publishMessage(msg);*/
+    hardware_serial_interface::StepperArray msg;
+    msg.mode = 7;
     node.publishMessage(msg);
 
     return 0;
