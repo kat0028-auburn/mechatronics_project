@@ -5,6 +5,7 @@ Calibrate::Calibrate()
     calibrating = false;
     first_pass = false;
     second_pass = false;
+    solved = false;
     int steps_from_start = 0;
     data.clear();
     search_window = 400;
@@ -29,6 +30,8 @@ void Calibrate::setCalibration(bool start)
         this->data.clear();
         this->steps_from_start = 0;
         this->first_pass = false;
+        this->second_pass = false;
+        this->solved = false;
     }
 }
 
@@ -71,24 +74,42 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
             steps_from_start -= step_size;
         }
     }
-    else
+    else if(!solved)
     {
         msg.mode = 3;
         if (steps_from_start >= 0)
         {
-            // Calibration
-            this->calibrating = false;
-            
+            // Calibration            
             prepareData();
-            for (std::pair<int, int> i : data)
-            {
-                std::cout<<i.first<<", "<<i.second<<std::endl;
-            }
+            solved = true;
         }
         else
         {
             msg.steps = step_size;
             steps_from_start += step_size;
+        }
+    }
+    else
+    {
+        if (steps_from_start == min.first)
+        {
+            this->calibrating = false;
+        }
+        else
+        {
+            msg.steps = step_size;
+
+            if (min.first > 0)
+            {
+                msg.mode = 3;
+                steps_from_start += step_size;
+            }
+            else
+            {
+                msg.mode = 4;
+                steps_from_start -= step_size;
+            }
+            std::cout<<"Centering: " << steps_from_start << ", " << min.first << ", " << msg.steps << std::endl;
         }
     }
 
@@ -142,7 +163,6 @@ void Calibrate::prepareData()
         std::cout<<item.first<<", "<<item.second<<std::endl;
     }
 
-    std::pair<int, double> min;
     min = smoothed_data.at(0);
     for (std::pair<int, double> item : smoothed_data)
     {

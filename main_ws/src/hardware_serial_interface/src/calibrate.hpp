@@ -19,11 +19,14 @@ class Calibrate
     int steps_from_start;
     std::vector<std::pair<int, double>> data;
     std::vector<std::pair<int, double>> smoothed_data;
+    std::pair<int, double> min;
+
     int step_size;
     int search_window;
     bool calibrating;
     bool first_pass;
     bool second_pass;
+    bool solved;
 
     int findMinPoint();
     void prepareData();
