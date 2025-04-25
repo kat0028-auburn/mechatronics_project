@@ -132,10 +132,9 @@ void HardwareSerialInterfaceNode::calibrate()
         
         if (recv_message)
         {
-            //std::cout << left_range << ", " << right_range<<std::endl;
+            std::cout << total_steps / 10 << ", " << right_range<<std::endl;
             cal_tool.setMeasurements(left_range, right_range);
             hardware_serial_interface::StepperArray msg = cal_tool.getMotorCmd();
-            std::cout<<msg.steps<<std::endl;
             total_steps += msg.steps;
             motor_cmd_msg = std::to_string(msg.mode) + "," + std::to_string(msg.steps);
             port->write(motor_cmd_msg);
