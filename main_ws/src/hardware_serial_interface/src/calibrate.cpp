@@ -74,7 +74,7 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
     else
     {
         msg.mode = 3;
-        if (steps_from_start <= 0)
+        if (steps_from_start >= 0)
         {
             // Calibration
             this->calibrating = false;
