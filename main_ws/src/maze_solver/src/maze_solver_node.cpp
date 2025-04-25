@@ -19,6 +19,7 @@ class MazeSolverNode
     int side_tolerance;
     int steps_since_valid;
     int steps_since_correction;
+    bool recv;
 
     void sonarCallback(const hardware_serial_interface::SonarArray::ConstPtr &msg);
 
@@ -50,6 +51,7 @@ MazeSolverNode::MazeSolverNode()
     this->turn_cooldown = 0;
     this->steps_since_valid = 0;
     this->steps_since_correction = 0;
+    this->recv = false;
 }
 
 MazeSolverNode::~MazeSolverNode()
@@ -88,6 +90,8 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     {
         //shiftRight((10-msg->sonar_left) * 50);
     }
+
+    recv = true;
 }
 
 void MazeSolverNode::goForward()
@@ -141,13 +145,21 @@ void MazeSolverNode::turnAround()
         motor_pub.publish(stepper_msg);
         turn_cooldown = 3;
 
-        ros::Rate timer(1);
-        timer.sleep();
+        recv = false;
+        while (!recv)
+        {
+            ros::spinOnce();
+        }
+        
         stepper_msg.mode = 1;
         stepper_msg.steps = 1000;
         motor_pub.publish(stepper_msg);
 
-        timer.sleep();
+        recv = false;
+        while (!recv)
+        {
+            ros::spinOnce();
+        }
         stepper_msg.mode = 7;
         motor_pub.publish(stepper_msg);
     }
