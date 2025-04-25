@@ -143,6 +143,11 @@ void MazeSolverNode::turnAround()
 
         ros::Rate timer(1);
         timer.sleep();
+        stepper_msg.mode = 1;
+        stepper_msg.steps = 1000;
+        motor_pub.publish(stepper_msg);
+
+        timer.sleep();
         stepper_msg.mode = 7;
         motor_pub.publish(stepper_msg);
     }
