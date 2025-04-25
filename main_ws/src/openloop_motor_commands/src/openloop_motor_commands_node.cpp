@@ -77,7 +77,6 @@ int main(int argc, char **argv)
         loop_rate.sleep();
         ros::spinOnce();
     }
-    std::cout<<"here"<<std::endl;
     /*
     std::cout<<"here"<<std::endl;
     hardware_serial_interface::StepperArray msg;

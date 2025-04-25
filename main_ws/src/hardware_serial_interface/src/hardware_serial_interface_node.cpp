@@ -70,8 +70,7 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
         calibration_good = false;
         calibrate();
     }
-
-    if (!pause_serial_writer && calibration_good)
+    else if (!pause_serial_writer && calibration_good)
     {
         motor_cmd_msg = std::to_string(msg->mode) + "," + std::to_string(msg->steps);
         std::cout << motor_cmd_msg << std::endl;
