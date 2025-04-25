@@ -181,11 +181,19 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
         heading_check = true;
         std::cout<< "HEADING TOLERANCE" << std::endl;
     }
+    else 
+    {
+        heading_check = false;
+    }
 
     if (differnece > 5)
     {
         lateral_check = true;
         std::cout << "LATERAL TOLERANCE" << std::endl;
+    }
+    else
+    {
+        lateral_check = false;
     }
 
     if (total < 50)
