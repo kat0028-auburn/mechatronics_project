@@ -111,6 +111,7 @@ void HardwareSerialInterfaceNode::calibrate()
     int right_range;
     bool recv_message = false;
     int total_steps = 0;
+    int turn_cool_down = 0;
     
     cal_tool.setCalibration();
     while(!cal_tool.getCalibration())
@@ -130,7 +131,7 @@ void HardwareSerialInterfaceNode::calibrate()
             }
         }
         
-        if (recv_message)
+        if (recv_message && turn_cool_down == 0)
         {
             std::cout << total_steps / 10 << ", " << right_range<<std::endl;
             cal_tool.setMeasurements(left_range, right_range);
@@ -140,6 +141,11 @@ void HardwareSerialInterfaceNode::calibrate()
             std::cout<<motor_cmd_msg<<std::endl;
             port->write(motor_cmd_msg);
             recv_message = false;
+            turn_cool_down = 3;
+        }
+        else if(recv_message)
+        {
+            turn_cool_down--;
         }
     }    
     std::cout<<"moved: "<<total_steps<<std::endl;
