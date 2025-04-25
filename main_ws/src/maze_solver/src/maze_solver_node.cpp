@@ -24,6 +24,8 @@ class MazeSolverNode
     void turnRight();
     void goForward();
     void turnAround();
+    void shiftLeft(const double &val);
+    void shiftRight(const double &val);
 };
 
 MazeSolverNode::MazeSolverNode()
@@ -69,6 +71,15 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     else 
     {
         turnAround();
+    }
+    
+    if (msg->sonar_right > (front_tolerance + 5) && msg->sonar_right < 10)
+    {
+        shiftLeft((10-msg->sonar_right) * 50);
+    }
+    if (msg->sonar_front > (front_tolerance + 5) && msg->sonar_left < 10)
+    {
+        shiftRight((10-msg->sonar_left) * 50);
     }
 }
 
@@ -121,6 +132,24 @@ void MazeSolverNode::turnAround()
         turn_cooldown = 3;
     }
     --turn_cooldown;
+}
+
+void MazeSolverNode::shiftLeft(const double &val)
+{
+    hardware_serial_interface::StepperArray stepper_msg;
+    stepper_msg.mode = 5;
+    stepper_msg.steps = val;
+    stepper_msg.header.stamp = ros::Time::now();
+    motor_pub.publish(stepper_msg);
+}
+
+void MazeSolverNode::shiftRight(const double &val)
+{
+    hardware_serial_interface::StepperArray stepper_msg;
+    stepper_msg.mode = 6;
+    stepper_msg.steps = val;
+    stepper_msg.header.stamp = ros::Time::now();
+    motor_pub.publish(stepper_msg);
 }
 
 int main(int argc, char **argv)

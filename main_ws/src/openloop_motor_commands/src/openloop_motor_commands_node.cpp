@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     msg.header.stamp = ros::Time::now();
     
     msg.mode = 6;
-    msg.steps = 1000;
+    msg.steps = 500;
 
     node.publishMessage(msg);
     return 0;
