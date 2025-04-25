@@ -44,7 +44,7 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
 {
     hardware_serial_interface::StepperArray msg;
 
-    //std::cout<<steps_from_start << ", " << search_window<<std::endl;
+    std::cout<<steps_from_start << ", " << search_window<<std::endl;
     if (!first_pass)
     {
         msg.mode = 3;
