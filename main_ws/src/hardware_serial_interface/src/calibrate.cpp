@@ -63,7 +63,7 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
         msg.mode = 4;
         if (steps_from_start <= -1*search_window)
         {
-            second_pass = false;
+            second_pass = true;
         }
         else
         {
@@ -77,6 +77,7 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
         if (steps_from_start <= 0)
         {
             // Calibration
+            this->calibrating = false;
         }
         else
         {
