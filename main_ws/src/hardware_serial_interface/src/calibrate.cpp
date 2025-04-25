@@ -51,7 +51,7 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
         if (steps_from_start > search_window)
         {
             msg.mode = 4;
-            msg.steps = step_size;
+            msg.steps = steps_from_start;
             first_pass = true;
             std::cout<<steps_from_start<<std::endl;
             this->calibrating = false;
