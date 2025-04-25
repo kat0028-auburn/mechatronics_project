@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     hardware_serial_interface::StepperArray msg;
     msg.header.stamp = ros::Time::now();
     
-    msg.mode = 0;
+    msg.mode = 1;
     msg.steps = 1000;
 
     node.publishMessage(msg);
