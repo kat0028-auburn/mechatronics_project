@@ -73,6 +73,8 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
             {
                 //std::cout<<i.first << ", "<< i.second<<std::endl;
             }
+            calibrating = false;
+            std::cout<<"done"<<std::endl;
         }
         else
         {
