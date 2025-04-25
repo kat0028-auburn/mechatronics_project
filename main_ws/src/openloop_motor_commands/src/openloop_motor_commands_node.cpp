@@ -62,6 +62,7 @@ void OpenloopMotorCommandsNode::callback(const hardware_serial_interface::SonarA
 
 bool OpenloopMotorCommandsNode::checkCalibration(const int &left_range, const int &right_range)
 {
+    std::cout << "Total Range: "<<left_range+right_range<<std::endl;
     return ((left_range + right_range) < 40 && (left_range + right_range) > 30);
 }
 
