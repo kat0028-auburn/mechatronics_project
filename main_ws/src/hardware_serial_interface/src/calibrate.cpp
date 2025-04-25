@@ -53,10 +53,10 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
             msg.mode = 4;
             msg.steps = steps_from_start;
             first_pass = true;
-            steps_from_start = 0;
             std::cout<<steps_from_start<<std::endl;
             this->calibrating = false;
             std::cout<<"here"<<std::endl;
+            steps_from_start = 0;
         }    
         else
         {
