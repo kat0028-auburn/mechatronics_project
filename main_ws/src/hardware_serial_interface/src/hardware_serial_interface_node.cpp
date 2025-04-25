@@ -63,7 +63,6 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
 {
     //motor_cmd_msg = std::to_string(msg->data);
     checkPort();
-    std::cout<<"Main motor control"<<std::endl;
     if (msg->mode == 7)
     {
         calibration_good = false;
@@ -71,7 +70,6 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
     }
     else if (!pause_serial_writer && calibration_good)
     {
-        std::cout<<"SHOULD NOT SEE THIS"<<std::endl;
         motor_cmd_msg = std::to_string(msg->mode) + "," + std::to_string(msg->steps);
         std::cout << motor_cmd_msg << std::endl;
         port->write(motor_cmd_msg);
@@ -112,6 +110,7 @@ void HardwareSerialInterfaceNode::calibrate()
     int left_range;
     int right_range;
     bool recv_message = false;
+    int total_steps = 0;
     
     cal_tool.setCalibration();
     while(!cal_tool.getCalibration())
@@ -137,12 +136,13 @@ void HardwareSerialInterfaceNode::calibrate()
             cal_tool.setMeasurements(left_range, right_range);
             hardware_serial_interface::StepperArray msg = cal_tool.getMotorCmd();
             std::cout<<msg.steps<<std::endl;
+            total_steps += msg.steps;
             motor_cmd_msg = std::to_string(msg.mode) + "," + std::to_string(msg.steps);
             port->write(motor_cmd_msg);
             recv_message = false;
         }
     }    
-
+    std::cout<<"moved: "<<total_steps<<std::endl;
     calibration_good = !cal_tool.getCalibration();
 }
 
