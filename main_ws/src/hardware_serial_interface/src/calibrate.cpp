@@ -78,6 +78,8 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
         {
             // Calibration
             this->calibrating = false;
+            
+            prepareData();
             for (std::pair<int, int> i : data)
             {
                 std::cout<<i.first<<", "<<i.second<<std::endl;
@@ -96,4 +98,40 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
 int Calibrate::findMinPoint()
 {
     return 0;
+}
+
+void Calibrate::prepareData()
+{
+    std::vector<std::pair<int, int>> unsorted = data;
+    data.clear();
+
+    for (int i = -search_window; i < search_window; ++i)
+    {
+        std::pair<int, int> point;
+        point.first = i;
+        
+        std::vector<int> vals;
+        for (std::pair<int, int> item : unsorted)
+        {
+            if (item.first == i)
+            {
+                vals.push_back(item.second);
+            }
+        }
+        point.second = average(vals);
+    }
+
+    data = unsorted;
+}
+
+int Calibrate::average(std::vector<int> nums)
+{
+    int total = 0;
+    for (int i : nums)
+    {
+        total += i;
+    }
+    double a = round(total/nums.size());
+
+    return (int)a;
 }

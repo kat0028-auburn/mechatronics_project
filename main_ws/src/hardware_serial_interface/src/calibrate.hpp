@@ -25,6 +25,8 @@ class Calibrate
     bool second_pass;
 
     int findMinPoint();
+    void prepareData();
+    int average(std::vector<int> nums);
 };
 
 #endif
