@@ -22,6 +22,7 @@ Calibrate::~Calibrate()
 
 bool Calibrate::getCalibration()
 {
+    std::cout<<heading_calibrated<<", "<<lateral_calibrated<<", "<<lateral_phase<<std::endl;
     return (this->heading_calibrated && this->lateral_calibrated);
 }
 
