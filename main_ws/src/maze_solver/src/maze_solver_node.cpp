@@ -94,7 +94,7 @@ void MazeSolverNode::goForward()
 {
     hardware_serial_interface::StepperArray stepper_msg;
     stepper_msg.mode = 1;
-    stepper_msg.steps = 50;
+    stepper_msg.steps = 20;
     stepper_msg.header.stamp = ros::Time::now();
     motor_pub.publish(stepper_msg);
 
@@ -181,7 +181,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
     int total = left_range + right_range;
     int differnece = abs(left_range - right_range);
     
-    if (total > 30 && total < 50)
+    if (total > 30 && total < 40)
     {
         heading_check = true;
         std::cout<< "HEADING TOLERANCE" << std::endl;
@@ -204,7 +204,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
     if (total < 50)
     {
         std::cout<<"Valid: "<<steps_since_valid<<", "<<steps_since_correction<<std::endl;
-        if ((lateral_check || heading_check) && (steps_since_valid > 1000 && steps_since_correction > 2000 && range_front > 40))
+        if ((lateral_check || heading_check) && (steps_since_valid > 1000 && steps_since_correction > 2000 && range_front > 40) && (left_range <= 15 || right_range >= 15))
         {
             std::cout<<"CALIBRATE"<<std::endl;
             steps_since_correction = 0;
