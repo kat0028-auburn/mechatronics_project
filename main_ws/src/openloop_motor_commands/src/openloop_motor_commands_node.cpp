@@ -51,6 +51,10 @@ void OpenloopMotorCommandsNode::callback(const hardware_serial_interface::SonarA
     {
         std::cout<<"Calibrate"<<std::endl;
     }
+    else 
+    {
+        std::cout<<"no"<<std::endl;
+    }
 }
 
 int main(int argc, char **argv)
@@ -58,7 +62,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "openloop_motor_commands");
     OpenloopMotorCommandsNode node;
     ros::Rate loop_rate(10);
-    while (!node.send_message)
+    while (!node.send_message && ros::ok())
     {
         loop_rate.sleep();
         ros::spinOnce();
