@@ -4,6 +4,7 @@ Calibrate::Calibrate()
 {
     calibrating = false;
     first_pass = false;
+    second_pass = false;
     int steps_from_start = 0;
     data.clear();
     search_window = 400;
