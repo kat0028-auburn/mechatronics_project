@@ -113,7 +113,6 @@ void HardwareSerialInterfaceNode::calibrate()
     bool recv_message = false;
     
     cal_tool.setCalibration();
-    std::cout<<cal_tool.getCalibration()<<std::endl;
     while(!cal_tool.getCalibration())
     {
         if (port->available())
