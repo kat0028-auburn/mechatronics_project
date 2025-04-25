@@ -78,7 +78,7 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
                 msg.steps = turn_steps;  
 
                 int avg = (left_range + right_range)/2;
-                lateral_error = abs(abs(left_range-right_range)-avg);
+                lateral_error = abs(std::min(left_range, right_range)-avg);
                 lateral_phase = 1;    
             }
             else 
