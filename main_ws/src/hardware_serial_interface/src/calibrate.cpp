@@ -117,6 +117,8 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
             first_pass = false;
             second_pass = false;
             solved = false;
+            data.clear();
+            smoothed_data.clear();
         } 
     }
     else
