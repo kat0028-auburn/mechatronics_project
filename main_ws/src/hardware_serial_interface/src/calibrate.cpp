@@ -145,8 +145,8 @@ void Calibrate::prepareData()
 
 double Calibrate::average(std::vector<double> nums)
 {
-    int total = 0;
-    for (int i : nums)
+    double total = 0;
+    for (double i : nums)
     {
         total += i;
     }
