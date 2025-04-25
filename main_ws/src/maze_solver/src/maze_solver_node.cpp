@@ -17,6 +17,8 @@ class MazeSolverNode
     int turn_cooldown;
     int front_tolerance;
     int side_tolerance;
+    int steps_since_valid;
+    int steps_since_correction;
 
     void sonarCallback(const hardware_serial_interface::SonarArray::ConstPtr &msg);
 
@@ -46,6 +48,8 @@ MazeSolverNode::MazeSolverNode()
     this->motor_pub = this->n.advertise<hardware_serial_interface::StepperArray>(motor_topic, 1);
 
     this->turn_cooldown = 0;
+    this->steps_since_valid = 0;
+    this->steps_since_correction = 0;
 }
 
 MazeSolverNode::~MazeSolverNode()
@@ -93,6 +97,9 @@ void MazeSolverNode::goForward()
     stepper_msg.steps = 50;
     stepper_msg.header.stamp = ros::Time::now();
     motor_pub.publish(stepper_msg);
+
+    steps_since_valid += stepper_msg.steps;
+    steps_since_correction += stepper_msg.steps;
 }
 
 void MazeSolverNode::turnLeft()
@@ -144,6 +151,9 @@ void MazeSolverNode::shiftLeft(const double &val)
     stepper_msg.steps = val;
     stepper_msg.header.stamp = ros::Time::now();
     motor_pub.publish(stepper_msg);
+
+    steps_since_valid += val;
+    steps_since_correction += val;
 }
 
 void MazeSolverNode::shiftRight(const double &val)
@@ -153,6 +163,9 @@ void MazeSolverNode::shiftRight(const double &val)
     stepper_msg.steps = val;
     stepper_msg.header.stamp = ros::Time::now();
     motor_pub.publish(stepper_msg);
+    
+    steps_since_valid += val;
+    steps_since_correction += val;
 }
 
 void MazeSolverNode::checkCalibration(const double &left_range, const double &right_range)
@@ -173,14 +186,19 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
         lateral_check = true;
     }
 
-
-    if ((total < 50))
+    if (total < 50)
     {
-        std::cout<<"YES"<<std::endl;
-    }
-    else
+        if ((lateral_check || heading_check) && (steps_since_valid > 100 && steps_since_correction > 1000))
+        {
+            steps_since_correction = 0;
+            hardware_serial_interface::StepperArray msg;
+            msg.mode = 7;
+            msg.header.stamp = ros::Time::now();
+        }
+    }   
+    else 
     {
-        std::cout<<"NO"<<std::endl;
+        steps_since_valid = 0;
     }
     //hardware_serial_interface::StepperArray stepper_msg;
     //stepper_msg.mode = 7;
