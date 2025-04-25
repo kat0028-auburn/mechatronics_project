@@ -15,8 +15,10 @@ class OpenloopMotorCommandsNode
     ros::NodeHandle n;
     ros::Publisher pub;
     ros::Subscriber sub;
+    bool calibrate;
 
     void callback(const hardware_serial_interface::SonarArray::ConstPtr &msg);
+    bool checkCalibration(const int &left_range, const int& right_range);
 };
 
 OpenloopMotorCommandsNode::OpenloopMotorCommandsNode()
@@ -32,6 +34,7 @@ OpenloopMotorCommandsNode::OpenloopMotorCommandsNode()
     this->sub = n.subscribe(sub_topic, 1, &OpenloopMotorCommandsNode::callback, this);
 
     this->send_message = false;
+    this->calibrate = false;
 }
 
 OpenloopMotorCommandsNode::~OpenloopMotorCommandsNode()
@@ -46,15 +49,20 @@ void OpenloopMotorCommandsNode::publishMessage(hardware_serial_interface::Steppe
 
 void OpenloopMotorCommandsNode::callback(const hardware_serial_interface::SonarArray::ConstPtr &msg)
 {
-    //send_message = true;
-    if (msg->sonar_left + msg->sonar_right < 40)
+    // Run Calibration Checks 
+    if (checkCalibration(msg->sonar_left, msg->sonar_right))
     {
-        std::cout<<"Calibrate"<<std::endl;
+        std::cout<<"Run Calibration"<<std::endl;
     }
-    else 
+    else
     {
-        std::cout<<"no"<<std::endl;
+        std::cout<<"Calibration Good"<<std::endl;
     }
+}
+
+bool OpenloopMotorCommandsNode::checkCalibration(const int &left_range, const int &right_range)
+{
+    return ((left_range + right_range) < 40 && (left_range + right_range) > 30);
 }
 
 int main(int argc, char **argv)
