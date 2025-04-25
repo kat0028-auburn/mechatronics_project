@@ -64,7 +64,6 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
         {
             if (abs(left_range - right_range) >= 2)
             {
-                heading_calibrated = false;
                 lateral_calibrated = false;
                 
                 if (left_range > right_range)
@@ -113,7 +112,6 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
             lateral_phase = 0;
             
             lateral_calibrated = true;
-            heading_calibrated = false;
             first_pass = false;
             second_pass = false;
             solved = false;
