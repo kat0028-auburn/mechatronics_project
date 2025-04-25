@@ -36,7 +36,7 @@ class Calibrate
     int lateral_cal_mode;
     int lateral_phase;
     int turn_steps;
-    int lateral_error;
+    double lateral_error;
 
     int findMinPoint();
     void prepareData();

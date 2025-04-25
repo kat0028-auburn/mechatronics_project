@@ -79,19 +79,22 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
 
                 int avg = (left_range + right_range)/2;
                 lateral_error = abs(abs(left_range-right_range)-avg);
-                lateral_phase = 1;              
+                lateral_phase = 1;    
             }
             else 
             {
                 lateral_calibrated = true;
             }
+            std::cout<<"Phase 1: "<<left_range<<", "<<right_range<<", "<<lateral_error<<std::endl;
         }
         else if (lateral_phase == 1)
         {
-            int shift = lateral_error * 100/0.95;
+            int shift = lateral_error * 100.0/0.95;
             msg.mode = 1;
             msg.steps = shift;
             lateral_phase = 2;
+
+            std::cout<<"Phase 2: "<<shift<<std::endl;
         }
         else if (lateral_phase == 2)
         {
