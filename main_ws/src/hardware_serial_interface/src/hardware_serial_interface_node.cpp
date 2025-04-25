@@ -108,6 +108,7 @@ void HardwareSerialInterfaceNode::checkPort()
 
 void HardwareSerialInterfaceNode::calibrate()
 {
+    std::cout<<"calibrate"<<std::endl;
     std::string in_msg;
     int left_range;
     int right_range;
