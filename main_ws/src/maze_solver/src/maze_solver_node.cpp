@@ -28,7 +28,7 @@ class MazeSolverNode
     void turnAround();
     void shiftLeft(const double &val);
     void shiftRight(const double &val);
-    void checkCalibration(const double &left_range, const double &right_range);
+    void checkCalibration(const double &left_range, const double &right_range, const double &front_range);
 };
 
 MazeSolverNode::MazeSolverNode()
@@ -78,15 +78,15 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
         turnAround();
     }
 
-    checkCalibration(msg->sonar_left, msg->sonar_right);
+    checkCalibration(msg->sonar_left, msg->sonar_right, msg->sonar_front);
     
-    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_right < 13)
+    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_right < 10)
     {
-        shiftLeft((13-msg->sonar_right) * 100);
+        shiftLeft((10-msg->sonar_right) * 100);
     }
-    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_left < 13)
+    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_left < 10)
     {
-        shiftRight((13-msg->sonar_left) * 100);
+        shiftRight((10-msg->sonar_left) * 100);
     }
 }
 
@@ -168,7 +168,7 @@ void MazeSolverNode::shiftRight(const double &val)
     steps_since_correction += val;
 }
 
-void MazeSolverNode::checkCalibration(const double &left_range, const double &right_range)
+void MazeSolverNode::checkCalibration(const double &left_range, const double &right_range, const double &range_front)
 {
     bool heading_check = false;
     bool lateral_check = false;
@@ -199,7 +199,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
     if (total < 50)
     {
         std::cout<<"Valid: "<<steps_since_valid<<", "<<steps_since_correction<<std::endl;
-        if ((lateral_check || heading_check) && (steps_since_valid > 100 && steps_since_correction > 2000))
+        if ((lateral_check || heading_check) && (steps_since_valid > 100 && steps_since_correction > 2000 && range_front > 40))
         {
             std::cout<<"CALIBRATE"<<std::endl;
             steps_since_correction = 0;
