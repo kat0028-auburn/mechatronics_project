@@ -191,6 +191,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
         std::cout<<"Valid: "<<steps_since_valid<<", "<<steps_since_correction<<std::endl;
         if ((lateral_check || heading_check) && (steps_since_valid > 100 && steps_since_correction > 1000))
         {
+            std::cout<<"CALIBRATE"<<std::endl;
             steps_since_correction = 0;
             hardware_serial_interface::StepperArray msg;
             msg.mode = 7;
