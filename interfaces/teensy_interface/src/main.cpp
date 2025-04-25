@@ -153,6 +153,14 @@ void runMotors()
         oneStepRight(false);
         delay(5);
       }
+
+      for (int i = 0; i < 2*drive_value; ++i)
+      {
+        oneStepLeft(true);
+        oneStepRight(false);  
+        delay(5);
+      }
+
       for (int i = 0; i < drive_value; ++i)
       {
         oneStepLeft(true);
@@ -172,6 +180,14 @@ void runMotors()
         oneStepLeft(true);
         delay(5);
       }
+
+      for (int i = 0; i < 2*drive_value; ++i)
+      {
+        oneStepLeft(true);
+        oneStepRight(false);  
+        delay(5);
+      }
+
       for (int i = 0; i < drive_value; ++i)
       {
         oneStepRight(false);

@@ -55,19 +55,19 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "openloop_motor_commands");
     OpenloopMotorCommandsNode node;
     ros::Rate loop_rate(10);
-    std::cout<<"test"<<std::endl;
     while (!node.send_message)
     {
         loop_rate.sleep();
         ros::spinOnce();
     }
 
+    std::cout<<"here"<<std::endl;
     hardware_serial_interface::StepperArray msg;
     msg.header.stamp = ros::Time::now();
     
-    msg.mode = 6;
-    msg.steps = 500;
-
+    msg.steps = 200;
+    msg.mode = 5;
     node.publishMessage(msg);
+
     return 0;
 }
