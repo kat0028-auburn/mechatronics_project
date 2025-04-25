@@ -82,11 +82,11 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     
     if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_right < 10)
     {
-        shiftLeft((10-msg->sonar_right) * 50);
+        //shiftLeft((10-msg->sonar_right) * 50);
     }
     if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_left < 10)
     {
-        shiftRight((10-msg->sonar_left) * 50);
+        //shiftRight((10-msg->sonar_left) * 50);
     }
 }
 
