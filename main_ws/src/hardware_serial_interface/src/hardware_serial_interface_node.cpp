@@ -153,7 +153,8 @@ void HardwareSerialInterfaceNode::calibrate()
         }
     }    
     std::cout<<"exit"<<std::endl;
-    calibration_good = !cal_tool.getCalibration();
+    calibration_good = cal_tool.getCalibration();
+    std::cout<<"Calibration: "<<calibration_good<<std::endl;
 }
 
 int main(int argc, char **argv)
