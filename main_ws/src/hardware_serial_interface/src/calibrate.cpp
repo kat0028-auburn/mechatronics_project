@@ -105,7 +105,7 @@ void Calibrate::prepareData()
     std::vector<std::pair<int, int>> unsorted = data;
     data.clear();
 
-    for (int i = -search_window; i < search_window; ++i)
+    for (int i = -search_window; i < search_window; i += 10)
     {
         std::pair<int, int> point;
         point.first = i;
