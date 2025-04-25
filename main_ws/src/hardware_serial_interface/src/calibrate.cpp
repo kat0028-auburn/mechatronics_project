@@ -44,15 +44,13 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
 {
     hardware_serial_interface::StepperArray msg;
 
-    std::cout<<steps_from_start << ", " << search_window<<std::endl;
     if (!first_pass)
     {
         msg.mode = 3;
         if (steps_from_start >= search_window)
         {
-            //msg.mode = 4;
-            //msg.steps = steps_from_start;
-            std::cout<<"done"<<std::endl;
+            msg.mode = 4;
+            msg.steps = steps_from_start;
             first_pass = true;
             this->calibrating = false;
             steps_from_start = 0;
@@ -69,7 +67,7 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
         if (steps_from_start <= -1*search_window)
         {
             findMinPoint();
-            //std::cout<<"Finished Calibration"<<std::endl;
+            std::cout<<"Finished Calibration"<<std::endl;
             // Do something with this point
             for (std::pair<int, int> i : data)
             {
