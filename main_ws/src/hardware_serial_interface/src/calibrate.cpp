@@ -119,9 +119,8 @@ void Calibrate::prepareData()
             }
         }
         point.second = average(vals);
+        data.push_back(point);
     }
-
-    data = unsorted;
 }
 
 int Calibrate::average(std::vector<int> nums)
