@@ -110,6 +110,7 @@ void HardwareSerialInterfaceNode::calibrate()
     std::string in_msg;
     int left_range;
     int right_range;
+    bool recv_message = false;
     
     cal_tool.setCalibration();
     std::cout<<cal_tool.getCalibration()<<std::endl;
@@ -126,13 +127,19 @@ void HardwareSerialInterfaceNode::calibrate()
                 // msg.sonar_front = std::stof(result.at(2).c_str());
                 left_range = std::stof(result.at(1).c_str());
                 right_range = std::stof(result.at(0).c_str());
+                recv_message = true;
             }
         }
-
-        cal_tool.setMeasurements(left_range, right_range);
-        hardware_serial_interface::StepperArray msg = cal_tool.getMotorCmd();
-        motor_cmd_msg = std::to_string(msg.mode) + "," + std::to_string(msg.steps);
-        port->write(motor_cmd_msg);
+        
+        if (recv_message)
+        {
+            std::cout << left_range << ", " << right_range<<std::endl;
+            cal_tool.setMeasurements(left_range, right_range);
+            hardware_serial_interface::StepperArray msg = cal_tool.getMotorCmd();
+            motor_cmd_msg = std::to_string(msg.mode) + "," + std::to_string(msg.steps);
+            port->write(motor_cmd_msg);
+            recv_message = false;
+        }
     }    
 
     calibration_good = !cal_tool.getCalibration();
