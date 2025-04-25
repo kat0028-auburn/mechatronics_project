@@ -162,7 +162,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "hardware_serial_interface");
     HardwareSerialInterfaceNode node;
-    ros::Rate loop_rate(500);
+    ros::Rate loop_rate(1000);
 
     while(ros::ok())
     {
