@@ -38,6 +38,8 @@ void Calibrate::setCalibration(bool start)
         this->heading_calibrated = false;
         this->lateral_calibrated = false;
         this->lateral_phase = 0;
+        this->data.clear();
+        this->smoothed_data.clear();
     }
 }
 
