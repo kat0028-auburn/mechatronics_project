@@ -140,6 +140,9 @@ void MazeSolverNode::turnAround()
         stepper_msg.header.stamp = ros::Time::now();
         motor_pub.publish(stepper_msg);
         turn_cooldown = 3;
+
+        stepper_msg.mode = 7;
+        motor_pub.publish(stepper_msg);
     }
     --turn_cooldown;
 }
