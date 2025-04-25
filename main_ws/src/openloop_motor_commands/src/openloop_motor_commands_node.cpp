@@ -58,6 +58,7 @@ void OpenloopMotorCommandsNode::callback(const hardware_serial_interface::SonarA
     {
         std::cout<<"Calibration Good"<<std::endl;
     }
+    send_message = true;
 }
 
 bool OpenloopMotorCommandsNode::checkCalibration(const int &left_range, const int &right_range)
@@ -71,12 +72,13 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "openloop_motor_commands");
     OpenloopMotorCommandsNode node;
     ros::Rate loop_rate(10);
-    /* while (!node.send_message && ros::ok())
+    while (!node.send_message && ros::ok())
     {
         loop_rate.sleep();
         ros::spinOnce();
     }
-
+    std::cout<<"here"<<std::endl;
+    /*
     std::cout<<"here"<<std::endl;
     hardware_serial_interface::StepperArray msg;
     msg.header.stamp = ros::Time::now();
