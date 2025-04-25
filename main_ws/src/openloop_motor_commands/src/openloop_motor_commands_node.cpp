@@ -24,6 +24,7 @@ OpenloopMotorCommandsNode::OpenloopMotorCommandsNode()
     std::string sub_topic;
     std::string pub_topic; 
 
+    this->n = ros::NodeHandle("~");
     this->n.param<std::string>("sub_topic", sub_topic, "sub");
     this->n.param<std::string>("pub_topic", pub_topic, "pub");
 
