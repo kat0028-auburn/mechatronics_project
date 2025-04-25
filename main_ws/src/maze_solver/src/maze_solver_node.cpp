@@ -176,12 +176,12 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
     int total = left_range + right_range;
     int differnece = abs(left_range - right_range);
     
-    if (total >= 30 && total < 50)
+    if (total > 30 && total < 50)
     {
         heading_check = true;
     }
 
-    if (differnece > 2)
+    if (differnece > 5)
     {
         lateral_check = true;
     }
