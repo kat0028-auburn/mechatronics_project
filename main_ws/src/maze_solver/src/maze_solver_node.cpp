@@ -82,11 +82,11 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     
     if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_right < 10)
     {
-        shiftLeft((10-msg->sonar_right) * 100);
+        shiftLeft((10-msg->sonar_right) * 50);
     }
     if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_left < 10)
     {
-        shiftRight((10-msg->sonar_left) * 100);
+        shiftRight((10-msg->sonar_left) * 50);
     }
 }
 
@@ -199,7 +199,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
     if (total < 50)
     {
         std::cout<<"Valid: "<<steps_since_valid<<", "<<steps_since_correction<<std::endl;
-        if ((lateral_check || heading_check) && (steps_since_valid > 400 && steps_since_correction > 2000 && range_front > 40))
+        if ((lateral_check || heading_check) && (steps_since_valid > 1000 && steps_since_correction > 2000 && range_front > 40))
         {
             std::cout<<"CALIBRATE"<<std::endl;
             steps_since_correction = 0;
