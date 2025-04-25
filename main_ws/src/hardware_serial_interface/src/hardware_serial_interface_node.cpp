@@ -62,6 +62,10 @@ HardwareSerialInterfaceNode::~HardwareSerialInterfaceNode()
 void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interface::StepperArray::ConstPtr &msg)
 {
     //motor_cmd_msg = std::to_string(msg->data);
+    std::cout<<"callback"<<std::endl;
+    std::cout<<"Calibration: "<<calibration_good<<std::endl;
+    std::cout<<"pause: "<<pause_serial_writer<<std::endl;
+    
     checkPort();
     if (msg->mode == 7)
     {
@@ -70,6 +74,7 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
     }
     else if (!pause_serial_writer && calibration_good)
     {
+        std::cout<<"Standard"<<std::endl;
         motor_cmd_msg = std::to_string(msg->mode) + "," + std::to_string(msg->steps);
         std::cout << motor_cmd_msg << std::endl;
         port->write(motor_cmd_msg);
