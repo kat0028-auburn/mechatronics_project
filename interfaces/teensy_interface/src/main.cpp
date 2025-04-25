@@ -147,19 +147,19 @@ void runMotors()
     {
       for (int i = 0; i < drive_value; ++i)
       {
-        oneStepLeft(false);
-        delay(2);
-        oneStepRight(true);
-        oneStepLeft(false);
-        delay(2);
+        oneStepRight(false);
+        delay(5);
+        oneStepLeft(true);
+        oneStepRight(false);
+        delay(5);
       }
       for (int i = 0; i < drive_value; ++i)
       {
-        oneStepRight(true);
-        delay(2);
-        oneStepLeft(false);
-        oneStepRight(true);
-        delay(2);
+        oneStepLeft(true);
+        delay(5);
+        oneStepRight(false);
+        oneStepLeft(true);
+        delay(5);
       }
     }
     else if (drive_mode == 6)
@@ -167,18 +167,18 @@ void runMotors()
       for (int i = 0; i < drive_value; ++i)
       {
         oneStepLeft(true);
-        delay(2);
+        delay(5);
         oneStepRight(false);
         oneStepLeft(true);
-        delay(2);
+        delay(5);
       }
       for (int i = 0; i < drive_value; ++i)
       {
         oneStepRight(false);
-        delay(2);
+        delay(5);
         oneStepLeft(true);
         oneStepRight(false);
-        delay(2);
+        delay(5);
       }
     }
   }
