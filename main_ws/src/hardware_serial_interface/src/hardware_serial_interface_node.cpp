@@ -63,8 +63,10 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
 {
     //motor_cmd_msg = std::to_string(msg->data);
     checkPort();
+    std::cout<<msg->mode<<std::endl;
     if (msg->mode == 7)
     {
+        std::cout<<"inside"<<std::endl;
         calibration_good = false;
         calibrate();
     }
