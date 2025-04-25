@@ -43,7 +43,7 @@ HardwareSerialInterfaceNode::HardwareSerialInterfaceNode()
     this->n.param<int>("baudrate", baudrate, 115200);
 
     this->sonar_array_pub = this->n.advertise<hardware_serial_interface::SonarArray>(sonar_topic, 1);
-    this->stepper_sub = this->n.subscribe(stepper_topic, 10, &HardwareSerialInterfaceNode::stepperCallback, this);
+    this->stepper_sub = this->n.subscribe(stepper_topic, 1, &HardwareSerialInterfaceNode::stepperCallback, this);
 
     this->port = new serial::Serial(portname, baudrate);
 }
