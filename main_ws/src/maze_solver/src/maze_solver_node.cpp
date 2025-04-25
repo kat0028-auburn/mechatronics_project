@@ -26,6 +26,7 @@ class MazeSolverNode
     void turnAround();
     void shiftLeft(const double &val);
     void shiftRight(const double &val);
+    void checkCalibration(const double &left_range, const double &right_range);
 };
 
 MazeSolverNode::MazeSolverNode()
@@ -72,12 +73,14 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     {
         turnAround();
     }
+
+    checkCalibration(msg->sonar_left, msg->sonar_right);
     
-    if (msg->sonar_front > (front_tolerance + 5) && msg->sonar_right < 13)
+    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_right < 13)
     {
         shiftLeft((13-msg->sonar_right) * 100);
     }
-    if (msg->sonar_front > (front_tolerance + 5) && msg->sonar_left < 13)
+    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_left < 13)
     {
         shiftRight((13-msg->sonar_left) * 100);
     }
@@ -149,6 +152,29 @@ void MazeSolverNode::shiftRight(const double &val)
     stepper_msg.mode = 6;
     stepper_msg.steps = val;
     stepper_msg.header.stamp = ros::Time::now();
+    motor_pub.publish(stepper_msg);
+}
+
+void MazeSolverNode::checkCalibration(const double &left_range, const double &right_range)
+{
+    bool heading_check = false;
+    bool lateral_check = false;
+
+    int total = left_range + right_range;
+    int differnece = abs(left_range - right_range);
+    
+    if (total >= 30 && total < 50)
+    {
+        heading_check = true;
+    }
+
+    if (differnece > 2)
+    {
+        lateral_check = true;
+    }
+
+    hardware_serial_interface::StepperArray stepper_msg;
+    stepper_msg.mode = 7;
     motor_pub.publish(stepper_msg);
 }
 
