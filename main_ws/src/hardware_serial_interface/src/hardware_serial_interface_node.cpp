@@ -145,7 +145,6 @@ void HardwareSerialInterfaceNode::calibrate()
         }
         else if(recv_message)
         {
-            std::cout<<"cooldown: "<<turn_cool_down<<std::endl;
             recv_message = false;
             turn_cool_down--;
         }
