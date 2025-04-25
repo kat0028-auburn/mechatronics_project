@@ -66,6 +66,7 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
     if (msg->mode == 7)
     {
         calibration_good = false;
+        calibrate();
     }
 
     if (!pause_serial_writer && calibration_good)
@@ -132,6 +133,8 @@ void HardwareSerialInterfaceNode::calibrate()
         motor_cmd_msg = std::to_string(msg.mode) + "," + std::to_string(msg.steps);
         port->write(motor_cmd_msg);
     }    
+
+    calibration_good = !cal_tool.getCalibration();
 }
 
 int main(int argc, char **argv)
