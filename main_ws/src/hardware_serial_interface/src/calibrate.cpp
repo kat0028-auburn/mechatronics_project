@@ -1,8 +1,7 @@
 #include "calibrate.hpp"
 
-Calibrate::Calibrate()
+Calibrate::Calibrate(const int &turn_steps)
 {
-    calibrating = false;
     first_pass = false;
     second_pass = false;
     solved = false;
@@ -10,6 +9,10 @@ Calibrate::Calibrate()
     data.clear();
     search_window = 450;
     step_size = 10;
+    heading_calibrated = false;
+    lateral_calibrated = false;
+
+    this->turn_steps = turn_steps;
 }
 
 Calibrate::~Calibrate()
@@ -19,24 +22,28 @@ Calibrate::~Calibrate()
 
 bool Calibrate::getCalibration()
 {
-    return (!this->calibrating);
+    return (this->heading_calibrated && this->lateral_calibrated);
 }
 
 void Calibrate::setCalibration(bool start)
 {
     if (start)
     {
-        this->calibrating = true;
         this->data.clear();
         this->steps_from_start = 0;
         this->first_pass = false;
         this->second_pass = false;
         this->solved = false;
+        this->heading_calibrated = false;
+        this->lateral_calibrated = false;
+        this->lateral_phase = 0;
     }
 }
 
 void Calibrate::setMeasurements(const double& left_range, const double& right_range)
 {
+    this->left_range = left_range;
+    this->right_range = right_range;
     double total = left_range + right_range;
     std::pair<int, int> data_point; 
     data_point.first = steps_from_start;
@@ -47,6 +54,62 @@ void Calibrate::setMeasurements(const double& left_range, const double& right_ra
 hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
 {
     hardware_serial_interface::StepperArray msg;
+
+    if (heading_calibrated)
+    {
+        if (lateral_phase == 0)
+        {
+            if (abs(left_range - right_range) >= 2)
+            {
+                heading_calibrated = false;
+                lateral_calibrated = false;
+                
+                if (left_range > right_range)
+                {
+                    lateral_cal_mode = 1;
+                    msg.mode = 3;
+                }
+                else
+                {
+                    lateral_cal_mode = 2;
+                    msg.mode = 4;
+                }
+                
+                msg.steps = turn_steps;  
+
+                int avg = (left_range + right_range)/2;
+                lateral_error = abs(abs(left_range-right_range)-avg);
+                lateral_phase = 1;              
+            }
+            else 
+            {
+                lateral_calibrated = true;
+            }
+        }
+        else if (lateral_phase == 1)
+        {
+            int shift = lateral_error * 100/0.95;
+            msg.mode = 1;
+            msg.steps = shift;
+            lateral_phase = 2;
+        }
+        else if (lateral_phase == 2)
+        {
+            if (lateral_cal_mode == 1)
+            {
+                msg.mode = 4;
+            }
+            else
+            {
+                msg.mode = 3;
+            }
+            msg.steps = turn_steps;
+            lateral_phase = 0;
+            
+            lateral_calibrated = true;
+            heading_calibrated = false;
+        } 
+    }
 
     if (!first_pass)
     {
@@ -93,7 +156,7 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
     {
         if (steps_from_start == min.first)
         {
-            this->calibrating = false;
+            heading_calibrated = true;
         }
         else
         {

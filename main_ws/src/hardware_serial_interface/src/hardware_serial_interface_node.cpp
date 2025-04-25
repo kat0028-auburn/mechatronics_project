@@ -25,7 +25,7 @@ class HardwareSerialInterfaceNode
     std::string motor_cmd_msg;
     bool pause_serial_writer;
     bool calibration_good;
-    Calibrate cal_tool;
+    Calibrate *cal_tool;
 
     void stepperCallback(const hardware_serial_interface::StepperArray::ConstPtr &msg);
 };
@@ -33,6 +33,7 @@ class HardwareSerialInterfaceNode
 HardwareSerialInterfaceNode::HardwareSerialInterfaceNode()
 {
     this->n = ros::NodeHandle("~");
+    cal_tool = new Calibrate(1150);
 
     std::string sonar_topic;
     std::string stepper_topic;
@@ -118,8 +119,8 @@ void HardwareSerialInterfaceNode::calibrate()
     int total_steps = 0;
     int turn_cool_down = 0;
     
-    cal_tool.setCalibration();
-    while(!cal_tool.getCalibration())
+    cal_tool->setCalibration();
+    while(!cal_tool->getCalibration())
     {
         if (port->available())
         {
@@ -138,8 +139,8 @@ void HardwareSerialInterfaceNode::calibrate()
         
         if (recv_message && turn_cool_down == 0)
         {
-            cal_tool.setMeasurements(left_range, right_range);
-            hardware_serial_interface::StepperArray msg = cal_tool.getMotorCmd();
+            cal_tool->setMeasurements(left_range, right_range);
+            hardware_serial_interface::StepperArray msg = cal_tool->getMotorCmd();
             total_steps += msg.steps;
             motor_cmd_msg = std::to_string(msg.mode) + "," + std::to_string(msg.steps);
             port->write(motor_cmd_msg);
@@ -153,7 +154,7 @@ void HardwareSerialInterfaceNode::calibrate()
         }
     }    
     std::cout<<"exit"<<std::endl;
-    calibration_good = cal_tool.getCalibration();
+    calibration_good = cal_tool->getCalibration();
     std::cout<<"Calibration: "<<calibration_good<<std::endl;
 }
 
