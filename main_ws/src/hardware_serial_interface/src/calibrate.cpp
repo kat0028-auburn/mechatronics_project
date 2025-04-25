@@ -114,69 +114,71 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
             heading_calibrated = false;
         } 
     }
-
-    if (!first_pass)
-    {
-        msg.mode = 3;
-        if (steps_from_start >= search_window)
-        {
-            first_pass = true;
-        }    
-        else
-        {
-            msg.steps = step_size;
-            steps_from_start += step_size;
-        }
-    }
-    else if(!second_pass)
-    {
-        msg.mode = 4;
-        if (steps_from_start <= -1*search_window)
-        {
-            second_pass = true;
-        }
-        else
-        {
-            msg.steps = step_size;
-            steps_from_start -= step_size;
-        }
-    }
-    else if(!solved)
-    {
-        msg.mode = 3;
-        if (steps_from_start >= 0)
-        {
-            // Calibration            
-            prepareData();
-            solved = true;
-        }
-        else
-        {
-            msg.steps = step_size;
-            steps_from_start += step_size;
-        }
-    }
     else
     {
-        if (steps_from_start == min.first)
+        if (!first_pass)
         {
-            heading_calibrated = true;
-        }
-        else
-        {
-            msg.steps = step_size;
-
-            if (min.first > 0)
+            msg.mode = 3;
+            if (steps_from_start >= search_window)
             {
-                msg.mode = 3;
+                first_pass = true;
+            }    
+            else
+            {
+                msg.steps = step_size;
                 steps_from_start += step_size;
+            }
+        }
+        else if(!second_pass)
+        {
+            msg.mode = 4;
+            if (steps_from_start <= -1*search_window)
+            {
+                second_pass = true;
             }
             else
             {
-                msg.mode = 4;
+                msg.steps = step_size;
                 steps_from_start -= step_size;
             }
-            std::cout<<"Centering: " << steps_from_start << ", " << min.first << ", " << msg.steps << std::endl;
+        }
+        else if(!solved)
+        {
+            msg.mode = 3;
+            if (steps_from_start >= 0)
+            {
+                // Calibration            
+                prepareData();
+                solved = true;
+            }
+            else
+            {
+                msg.steps = step_size;
+                steps_from_start += step_size;
+            }
+        }
+        else
+        {
+            if (steps_from_start == min.first)
+            {
+                heading_calibrated = true;
+            }
+            else
+            {
+                msg.steps = step_size;
+
+                if (min.first > 0)
+                {
+                    msg.mode = 3;
+                    steps_from_start += step_size;
+                }
+                else
+                {
+                    msg.mode = 4;
+                    steps_from_start -= step_size;
+                }
+                std::cout<<"Centering: " << steps_from_start << ", " << min.first << ", " << msg.steps << std::endl;
+            }
         }
     }
 
