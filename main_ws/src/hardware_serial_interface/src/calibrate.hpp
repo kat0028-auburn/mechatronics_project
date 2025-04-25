@@ -22,6 +22,7 @@ class Calibrate
     int search_window;
     bool calibrating;
     bool first_pass;
+    bool second_pass;
 
     int findMinPoint();
 };
