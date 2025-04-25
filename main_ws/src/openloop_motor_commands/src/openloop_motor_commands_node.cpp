@@ -46,6 +46,7 @@ void OpenloopMotorCommandsNode::publishMessage(hardware_serial_interface::Steppe
 void OpenloopMotorCommandsNode::callback(const hardware_serial_interface::SonarArray::ConstPtr &msg)
 {
     send_message = true;
+    std::cout<<"received"<<std::endl;
 }
 
 int main(int argc, char **argv)
@@ -53,6 +54,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "openloop_motor_commands");
     OpenloopMotorCommandsNode node;
     ros::Rate loop_rate(10);
+    std::cout<<"test"<<std::endl;
     while (!node.send_message)
     {
         loop_rate.sleep();
