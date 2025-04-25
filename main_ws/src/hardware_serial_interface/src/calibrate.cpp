@@ -112,6 +112,9 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
             
             lateral_calibrated = true;
             heading_calibrated = false;
+            first_pass = false;
+            second_pass = false;
+            solved = false;
         } 
     }
     else
