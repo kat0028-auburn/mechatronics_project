@@ -22,7 +22,7 @@ Calibrate::~Calibrate()
 
 bool Calibrate::getCalibration()
 {
-    std::cout<<heading_calibrated<<", "<<lateral_calibrated<<", "<<lateral_phase<<std::endl;
+    //std::cout<<heading_calibrated<<", "<<lateral_calibrated<<", "<<lateral_phase<<std::endl;
     return (this->heading_calibrated && this->lateral_calibrated);
 }
 
@@ -225,7 +225,7 @@ void Calibrate::prepareData()
         {
             vals.push_back(data.at(i - j).second);
         }
-        std::cout<<vals.size();
+        //std::cout<<vals.size();
         std::pair<int, double> point;
         point.first = data.at(i).first;
         point.second = average(vals);
@@ -234,7 +234,7 @@ void Calibrate::prepareData()
     
     for (std::pair<int, double> item : smoothed_data)
     {
-        std::cout<<item.first<<", "<<item.second<<std::endl;
+        //std::cout<<item.first<<", "<<item.second<<std::endl;
     }
 
     min = smoothed_data.at(0);
