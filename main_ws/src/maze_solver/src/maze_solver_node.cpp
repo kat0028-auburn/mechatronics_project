@@ -173,9 +173,18 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
         lateral_check = true;
     }
 
-    hardware_serial_interface::StepperArray stepper_msg;
-    stepper_msg.mode = 7;
-    motor_pub.publish(stepper_msg);
+
+    if ((total < 50))
+    {
+        std::cout<<"YES"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"NO"<<std::endl;
+    }
+    //hardware_serial_interface::StepperArray stepper_msg;
+    //stepper_msg.mode = 7;
+    //motor_pub.publish(stepper_msg);
 }
 
 int main(int argc, char **argv)
