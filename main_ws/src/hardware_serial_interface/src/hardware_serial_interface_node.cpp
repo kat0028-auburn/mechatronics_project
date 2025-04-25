@@ -5,6 +5,8 @@
 #include <sstream>
 #include <boost/algorithm/string.hpp>
 
+#include "calibrate.hpp"
+
 class HardwareSerialInterfaceNode
 {
     public:
@@ -12,6 +14,7 @@ class HardwareSerialInterfaceNode
     ~HardwareSerialInterfaceNode();
 
     void checkPort();
+    void calibrate();
 
     private:
     ros::NodeHandle n;
@@ -21,6 +24,8 @@ class HardwareSerialInterfaceNode
     serial::Serial* port;
     std::string motor_cmd_msg;
     bool pause_serial_writer;
+    bool calibration_good;
+    Calibrate cal_tool;
 
     void stepperCallback(const hardware_serial_interface::StepperArray::ConstPtr &msg);
 };
@@ -34,6 +39,7 @@ HardwareSerialInterfaceNode::HardwareSerialInterfaceNode()
     std::string portname;
     int baudrate;
     pause_serial_writer = true;
+    calibration_good = true;
 
     motor_cmd_msg = "0";
 
@@ -57,13 +63,21 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
 {
     //motor_cmd_msg = std::to_string(msg->data);
     checkPort();
-    if (!pause_serial_writer)
+    if (msg->mode == 7)
+    {
+        calibration_good = false;
+    }
+
+    if (!pause_serial_writer && calibration_good)
     {
         motor_cmd_msg = std::to_string(msg->mode) + "," + std::to_string(msg->steps);
         std::cout << motor_cmd_msg << std::endl;
         port->write(motor_cmd_msg);
         pause_serial_writer = true;
     }
+
+    // Check Calibration Status
+    
 }
 
 void HardwareSerialInterfaceNode::checkPort()
@@ -88,6 +102,36 @@ void HardwareSerialInterfaceNode::checkPort()
         }
     }
     //this->port->write(this->motor_cmd_msg);
+}
+
+void HardwareSerialInterfaceNode::calibrate()
+{
+    std::string in_msg;
+    int left_range;
+    int right_range;
+    
+    cal_tool.setCalibration();
+    while(cal_tool.getCalibration())
+    {
+        if (port->available())
+        {
+            in_msg = this->port->readline();
+            std::vector<std::string> result;
+            boost::split(result, in_msg, boost::is_any_of(","));
+
+            if (result.size() > 2)
+            {    
+                // msg.sonar_front = std::stof(result.at(2).c_str());
+                left_range = std::stof(result.at(1).c_str());
+                right_range = std::stof(result.at(0).c_str());
+            }
+        }
+
+        cal_tool.setMeasurements(left_range, right_range);
+        hardware_serial_interface::StepperArray msg = cal_tool.getMotorCmd();
+        motor_cmd_msg = std::to_string(msg.mode) + "," + std::to_string(msg.steps);
+        port->write(motor_cmd_msg);
+    }    
 }
 
 int main(int argc, char **argv)
