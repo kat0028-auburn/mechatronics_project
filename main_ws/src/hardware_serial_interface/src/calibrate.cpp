@@ -141,6 +141,18 @@ void Calibrate::prepareData()
     {
         std::cout<<item.first<<", "<<item.second<<std::endl;
     }
+
+    std::pair<int, double> min;
+    min = smoothed_data.at(0);
+    for (std::pair<int, double> item : smoothed_data)
+    {
+        if (item.second < min.second)
+        {
+            min = item;
+        }
+    }
+
+    std::cout << "Minimum: " << min.first << ", " << min.second<<std::endl;
 }
 
 double Calibrate::average(std::vector<double> nums)
