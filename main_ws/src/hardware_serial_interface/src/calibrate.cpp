@@ -8,7 +8,7 @@ Calibrate::Calibrate()
     solved = false;
     int steps_from_start = 0;
     data.clear();
-    search_window = 400;
+    search_window = 450;
     step_size = 10;
 }
 
@@ -144,10 +144,10 @@ void Calibrate::prepareData()
     }
 
     smoothed_data.clear();
-    for (size_t i = 2; i < data.size()-2; i++)
+    for (size_t i = 4; i < data.size()-4; i++)
     {
         std::vector<double> vals;
-        for (int j = -2; j < 3; j++)
+        for (int j = -4; j < 5; j++)
         {
             vals.push_back(data.at(i - j).second);
         }
