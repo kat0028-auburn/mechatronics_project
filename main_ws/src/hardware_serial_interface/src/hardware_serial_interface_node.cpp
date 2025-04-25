@@ -66,7 +66,6 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
     std::cout<<msg->mode<<std::endl;
     if (msg->mode == 7)
     {
-        std::cout<<"inside"<<std::endl;
         calibration_good = false;
         calibrate();
     }
@@ -108,12 +107,12 @@ void HardwareSerialInterfaceNode::checkPort()
 
 void HardwareSerialInterfaceNode::calibrate()
 {
-    std::cout<<"calibrate"<<std::endl;
     std::string in_msg;
     int left_range;
     int right_range;
     
     cal_tool.setCalibration();
+    std::cout<<cal_tool.getCalibration()<<std::endl;
     while(cal_tool.getCalibration())
     {
         if (port->available())
