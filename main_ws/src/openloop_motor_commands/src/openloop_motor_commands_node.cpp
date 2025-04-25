@@ -46,8 +46,11 @@ void OpenloopMotorCommandsNode::publishMessage(hardware_serial_interface::Steppe
 
 void OpenloopMotorCommandsNode::callback(const hardware_serial_interface::SonarArray::ConstPtr &msg)
 {
-    send_message = true;
-    std::cout<<"received"<<std::endl;
+    //send_message = true;
+    if (msg->sonar_left + msg->sonar_right < 40)
+    {
+        std::cout<<"Calibrate"<<std::endl;
+    }
 }
 
 int main(int argc, char **argv)
