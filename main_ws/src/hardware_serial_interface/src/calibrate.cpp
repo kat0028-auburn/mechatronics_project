@@ -102,16 +102,16 @@ int Calibrate::findMinPoint()
 
 void Calibrate::prepareData()
 {
-    std::vector<std::pair<int, int>> unsorted = data;
+    std::vector<std::pair<int, double>> unsorted = data;
     data.clear();
 
     for (int i = -search_window; i < search_window; i += 10)
     {
-        std::pair<int, int> point;
+        std::pair<int, double> point;
         point.first = i;
         
-        std::vector<int> vals;
-        for (std::pair<int, int> item : unsorted)
+        std::vector<double> vals;
+        for (std::pair<int, double> item : unsorted)
         {
             if (item.first == i)
             {
@@ -121,16 +121,35 @@ void Calibrate::prepareData()
         point.second = average(vals);
         data.push_back(point);
     }
+
+    smoothed_data.clear();
+    for (size_t i = 2; i < data.size()-2; i++)
+    {
+        std::vector<double> vals;
+        for (int j = -2; j < 3; j++)
+        {
+            vals.push_back(data.at(i - j).second);
+        }
+        std::cout<<vals.size();
+        std::pair<int, double> point;
+        point.first = data.at(i).first;
+        point.second = average(vals);
+        smoothed_data.push_back(point);
+    }
+    
+    for (std::pair<int, double> item : smoothed_data)
+    {
+        std::cout<<item.first<<", "<<item.second<<std::endl;
+    }
 }
 
-int Calibrate::average(std::vector<int> nums)
+double Calibrate::average(std::vector<double> nums)
 {
     int total = 0;
     for (int i : nums)
     {
         total += i;
     }
-    double a = round(total/nums.size());
 
-    return (int)a;
+    return (total/nums.size());
 }

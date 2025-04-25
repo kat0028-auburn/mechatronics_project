@@ -17,7 +17,8 @@ class Calibrate
 
     private:
     int steps_from_start;
-    std::vector<std::pair<int, int>> data;
+    std::vector<std::pair<int, double>> data;
+    std::vector<std::pair<int, double>> smoothed_data;
     int step_size;
     int search_window;
     bool calibrating;
@@ -26,7 +27,7 @@ class Calibrate
 
     int findMinPoint();
     void prepareData();
-    int average(std::vector<int> nums);
+    double average(std::vector<double> nums);
 };
 
 #endif
