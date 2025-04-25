@@ -1,0 +1,6 @@
+<launch>
+    <node name="openloop_motor_commands" pkg="openloop_motor_commands" type="openloop_motor_commands_node" output="screen">
+        <rosparam file="$(find openloop_motor_commands)/config/params.yaml" command="load"/>
+    </node>
+    <include file="$(find hardware_serial_interface)/launch/hardware_serial_interface.launch"/>
+</launch> 

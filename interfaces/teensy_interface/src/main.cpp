@@ -143,6 +143,30 @@ void runMotors()
         delay(5);
       }
     }
+    else if (drive_mode == 5)
+    {
+      for (int i = 0; i < drive_value; ++i)
+      {
+        oneStepRight(false);
+        delay(5);
+        oneStepLeft(false);
+        delay(5);
+        oneStepLeft(false);
+        delay(5);
+      }
+    }
+    else if (drive_mode == 6)
+    {
+      for (int i = 0; i < drive_value; ++i)
+      {
+        oneStepLeft(true);
+        delay(5);
+        oneStepLeft(true);
+        delay(5);
+        oneStepRight(true);
+        delay(5);
+      }
+    }
   }
 }
 
