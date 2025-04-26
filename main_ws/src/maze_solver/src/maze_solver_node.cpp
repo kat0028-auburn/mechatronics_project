@@ -63,7 +63,15 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
 {
     std::cout << msg->sonar_front << ", " << msg->sonar_left << ", " << msg->sonar_right << std::endl;
 
-    if (msg->sonar_front > front_tolerance)
+    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_right < 13)
+    {
+        shiftLeft((13-msg->sonar_right) * 50);
+    }
+    else if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_left < 13)
+    {
+        shiftRight((13-msg->sonar_left) * 50);
+    }
+    else if (msg->sonar_front > front_tolerance)
     {
         int cmd = (msg->sonar_front  - 10) * 20;
         if (cmd < 0)
@@ -92,14 +100,7 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
 
     checkCalibration(msg->sonar_left, msg->sonar_right, msg->sonar_front);
     
-    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_right < 13)
-    {
-        shiftLeft((13-msg->sonar_right) * 50);
-    }
-    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_left < 13)
-    {
-        shiftRight((13-msg->sonar_left) * 50);
-    }
+    
 
     recv = true;
 }
@@ -233,6 +234,8 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
         std::cout<<"Valid: "<<steps_since_valid<<", "<<steps_since_correction<<std::endl;
         if ((lateral_check || heading_check) && (steps_since_valid > 2000 && steps_since_correction > 4000 && range_front > 40) && (left_range <= 15 || right_range <= 15))
         {
+            ros::Rate wait(1);
+            wait.sleep();
             std::cout<<"CALIBRATE"<<std::endl;
             steps_since_correction = 0;
             steps_since_valid = 0;
