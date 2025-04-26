@@ -242,6 +242,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
             msg.header.stamp = ros::Time::now();
             for (int i = 0; i < 3; i++)
             {
+                std::cout << "pub" << std::endl;
                 motor_pub.publish(msg);
             }
         }
