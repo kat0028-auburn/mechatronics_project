@@ -67,6 +67,7 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
     checkPort();
     if (msg->mode == 7)
     {
+        std::cout<<"CALIBRATE 2"<<std::endl;
         calibration_good = false;
         calibrate();
     }
