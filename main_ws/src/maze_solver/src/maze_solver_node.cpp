@@ -239,7 +239,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
             hardware_serial_interface::StepperArray msg;
             msg.mode = 7;
             msg.header.stamp = ros::Time::now();
-            motor_pub.publish(msg);
+            for (int i = 0; i < 3; i++){motor_pub.publish(msg);}
         }
         else if (!(left_range <= 15 || right_range <= 15))
         {
