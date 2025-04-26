@@ -92,13 +92,13 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
 
     checkCalibration(msg->sonar_left, msg->sonar_right, msg->sonar_front);
     
-    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_right < 10)
+    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_right < 13)
     {
-        shiftLeft((10-msg->sonar_right) * 50);
+        shiftLeft((13-msg->sonar_right) * 50);
     }
-    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_left < 10)
+    if (msg->sonar_front > (front_tolerance + 10) && msg->sonar_left < 13)
     {
-        shiftRight((10-msg->sonar_left) * 50);
+        shiftRight((13-msg->sonar_left) * 50);
     }
 
     recv = true;
