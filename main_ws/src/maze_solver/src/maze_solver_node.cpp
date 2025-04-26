@@ -241,6 +241,14 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
             msg.header.stamp = ros::Time::now();
             motor_pub.publish(msg);
         }
+        else if (!(left_range <= 15 || right_range <= 15))
+        {
+            std::cout<<"Calibration Blocked: Not Near Wall"<<std::endl;
+        }
+        else if (!(range_front > 40))
+        {
+            std::cout<<"Calibration Block: Too Close to front"<<std::endl;
+        }
     }   
     else 
     {
