@@ -77,13 +77,13 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
         
         goForward(cmd);
     }
-    else if (msg->sonar_left > side_tolerance)
-    {
-        turnLeft();
-    }
     else if(msg->sonar_right > side_tolerance)
     {
         turnRight();
+    }
+    else if (msg->sonar_left > side_tolerance)
+    {
+        turnLeft();
     }
     else 
     {
