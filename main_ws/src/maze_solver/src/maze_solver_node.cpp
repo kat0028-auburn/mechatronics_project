@@ -232,7 +232,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
         std::cout<<"Valid: "<<steps_since_valid<<", "<<steps_since_correction<<std::endl;
         if ((lateral_check || heading_check) && (steps_since_valid > 2000 && steps_since_correction > 4000 && range_front > 40) && (left_range <= 15 || right_range <= 15))
         {
-            ros::Rate wait(1);
+            ros::Rate wait(5);
             wait.sleep();
             std::cout<<"CALIBRATE"<<std::endl;
             steps_since_correction = 0;
@@ -242,7 +242,6 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
             msg.header.stamp = ros::Time::now();
             for (int i = 0; i < 3; i++)
             {
-                wait.sleep();
                 motor_pub.publish(msg);
             }
         }
