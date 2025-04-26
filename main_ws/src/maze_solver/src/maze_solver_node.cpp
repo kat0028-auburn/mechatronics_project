@@ -63,6 +63,8 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
 {
     std::cout << msg->sonar_front << ", " << msg->sonar_left << ", " << msg->sonar_right << std::endl;
 
+    checkCalibration(msg->sonar_left, msg->sonar_right, msg->sonar_front);
+
     if (msg->sonar_front > (front_tolerance + 5) && msg->sonar_right < 11)
     {
         shiftLeft((11-msg->sonar_right) * 50);
@@ -96,12 +98,8 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     else 
     {
         turnAround();
-    }
-
-    checkCalibration(msg->sonar_left, msg->sonar_right, msg->sonar_front);
+    }    
     
-    
-
     recv = true;
 }
 
