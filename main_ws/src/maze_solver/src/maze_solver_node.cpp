@@ -50,7 +50,7 @@ MazeSolverNode::MazeSolverNode()
 
     this->turn_cooldown = 0;
     this->steps_since_valid = 0;
-    this->steps_since_correction = 0;
+    this->steps_since_correction = 999999;
     this->recv = false;
 }
 
