@@ -25,7 +25,7 @@ class MazeSolverNode
 
     void turnLeft();
     void turnRight();
-    void goForward();
+    void goForward(const int &cmd = 20);
     void turnAround();
     void shiftLeft(const double &val);
     void shiftRight(const double &val);
@@ -65,7 +65,13 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
 
     if (msg->sonar_front > front_tolerance)
     {
-        goForward();
+        int cmd = (msg->sonar_front  - 10) * 20;
+        if (cmd < 0)
+        {
+            cmd = 20;
+        }
+        
+        goForward(cmd);
     }
     else if (msg->sonar_left > side_tolerance)
     {
@@ -94,7 +100,7 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     recv = true;
 }
 
-void MazeSolverNode::goForward()
+void MazeSolverNode::goForward(const int& cmd)
 {
     hardware_serial_interface::StepperArray stepper_msg;
     stepper_msg.mode = 1;
@@ -225,6 +231,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
         {
             std::cout<<"CALIBRATE"<<std::endl;
             steps_since_correction = 0;
+            steps_since_valid = 0;
             hardware_serial_interface::StepperArray msg;
             msg.mode = 7;
             msg.header.stamp = ros::Time::now();
