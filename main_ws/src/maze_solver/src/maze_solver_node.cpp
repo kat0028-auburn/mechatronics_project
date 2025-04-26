@@ -70,6 +70,10 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
         {
             cmd = 20;
         }
+        else if(cmd > 500)
+        {
+            cmd = 500;
+        }
         
         goForward(cmd);
     }
