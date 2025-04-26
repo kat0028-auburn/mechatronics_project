@@ -29,7 +29,7 @@ class MazeSolverNode
     void turnAround();
     void shiftLeft(const double &val);
     void shiftRight(const double &val);
-    void checkCalibration(const double &left_range, const double &right_range, const double &front_range);
+    bool checkCalibration(const double &left_range, const double &right_range, const double &front_range);
 };
 
 MazeSolverNode::MazeSolverNode()
@@ -63,9 +63,11 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
 {
     std::cout << msg->sonar_front << ", " << msg->sonar_left << ", " << msg->sonar_right << std::endl;
 
-    checkCalibration(msg->sonar_left, msg->sonar_right, msg->sonar_front);
-
-    if (msg->sonar_front > (front_tolerance + 5) && msg->sonar_right < 11)
+    if (checkCalibration(msg->sonar_left, msg->sonar_right, msg->sonar_front))
+    {
+        std::cout << "Running Calibration" << std::endl;
+    }
+    else if (msg->sonar_front > (front_tolerance + 5) && msg->sonar_right < 11)
     {
         shiftLeft((11-msg->sonar_right) * 50);
     }
@@ -199,7 +201,7 @@ void MazeSolverNode::shiftRight(const double &val)
     steps_since_correction += val;
 }
 
-void MazeSolverNode::checkCalibration(const double &left_range, const double &right_range, const double &range_front)
+bool MazeSolverNode::checkCalibration(const double &left_range, const double &right_range, const double &range_front)
 {
     bool heading_check = false;
     bool lateral_check = false;
@@ -240,6 +242,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
             msg.header.stamp = ros::Time::now();
             msg.steps = turn_steps;
             motor_pub.publish(msg);
+            return true;
         }
         else if (!(left_range <= 15 || right_range <= 15))
         {
@@ -254,6 +257,8 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
     {
         steps_since_valid = 0;
     }
+
+    return false;
     //hardware_serial_interface::StepperArray stepper_msg;
     //stepper_msg.mode = 7;
     //motor_pub.publish(stepper_msg);
