@@ -209,7 +209,7 @@ bool MazeSolverNode::checkCalibration(const double &left_range, const double &ri
     int total = left_range + right_range;
     int differnece = abs(left_range - right_range);
     
-    if (total > 30 && total < 40)
+    if (total > 30 && total < 35)
     {
         heading_check = true;
         std::cout<< "HEADING TOLERANCE" << std::endl;
@@ -229,12 +229,11 @@ bool MazeSolverNode::checkCalibration(const double &left_range, const double &ri
         lateral_check = false;
     }
 
-    if (total < 40)
+    if (total < 35)
     {
         std::cout<<"Valid: "<<steps_since_valid<<", "<<steps_since_correction<<std::endl;
         if ((lateral_check || heading_check) && (steps_since_valid > 2000 && steps_since_correction > 4000 && range_front > 40) && (left_range <= 15 || right_range <= 15))
         {
-            std::cout<<"CALIBRATE"<<std::endl;
             steps_since_correction = 0;
             steps_since_valid = 0;
             hardware_serial_interface::StepperArray msg;
