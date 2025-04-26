@@ -63,7 +63,7 @@ HardwareSerialInterfaceNode::~HardwareSerialInterfaceNode()
 void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interface::StepperArray::ConstPtr &msg)
 {
     //motor_cmd_msg = std::to_string(msg->data);
-    
+    std::cout<<"Motor CMD Mode: "<<msg->mode<<std::endl;
     checkPort();
     if (msg->mode == 7)
     {
