@@ -240,6 +240,7 @@ void MazeSolverNode::checkCalibration(const double &left_range, const double &ri
             hardware_serial_interface::StepperArray msg;
             msg.mode = 7;
             msg.header.stamp = ros::Time::now();
+            msg.steps = turn_steps;
             for (int i = 0; i < 3; i++)
             {
                 std::cout << "pub" << std::endl;
