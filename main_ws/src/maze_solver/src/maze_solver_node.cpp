@@ -171,11 +171,23 @@ void MazeSolverNode::turnAround()
             ros::spinOnce();
         }
         
+        std::cout<<"After Turn: " << sonar_front << ", " << sonar_left << ", " << sonar_right << std::endl;
+
         recv = false;
         while(!recv)
         {
             ros::spinOnce();
         }
+
+        std::cout<<"After Turn: " << sonar_front << ", " << sonar_left << ", " << sonar_right << std::endl;
+
+        recv = false;
+        while(!recv)
+        {
+            ros::spinOnce();
+        }
+
+        std::cout<<"After Turn: " << sonar_front << ", " << sonar_left << ", " << sonar_right << std::endl;
 
         if (sonar_left > 25)
         {
