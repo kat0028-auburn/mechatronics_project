@@ -177,10 +177,17 @@ void MazeSolverNode::turnAround()
             ros::spinOnce();
         }
 
-        if (sonar_left > 25 || sonar_right > 25)
+        if (sonar_left > 25)
         {
+            turnLeft();
             return;
         }
+        else if(sonar_right > 25)
+        {
+            turnRight();
+            return;
+        }
+
 
         stepper_msg.mode = 1;
         stepper_msg.steps = 1000;
