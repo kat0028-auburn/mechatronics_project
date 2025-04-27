@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     msg.steps = 1130 * 8;
     msg.mode = 4;
 
-    msg.steps = 1000;
+    msg.steps = 2000;
     msg.mode = 1;
 
     node.publishMessage(msg);
