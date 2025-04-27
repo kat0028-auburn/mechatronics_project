@@ -126,6 +126,7 @@ void HardwareSerialInterfaceNode::calibrate()
 
             if (result.size() > 2)
             {    
+                std::cout << "Cal Message: " << in_msg;
                 // msg.sonar_front = std::stof(result.at(2).c_str());
                 left_range = std::stof(result.at(1).c_str());
                 right_range = std::stof(result.at(0).c_str());
