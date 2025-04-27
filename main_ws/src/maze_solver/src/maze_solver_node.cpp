@@ -202,13 +202,11 @@ void MazeSolverNode::turnAround()
         {
             turn_cooldown = 0;
             turnLeft();
-            return;
         }
         else if(sonar_right > 25)
         {
             turn_cooldown = 0;
             turnRight();
-            return;
         }
         else if ((sonar_right + sonar_left > 30) || (abs(sonar_right - sonar_left) > 3))
         {
