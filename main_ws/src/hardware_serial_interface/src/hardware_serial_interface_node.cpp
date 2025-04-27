@@ -89,10 +89,10 @@ void HardwareSerialInterfaceNode::checkPort()
         in_msg = this->port->readline();
         std::vector<std::string> result;
         boost::split(result, in_msg, boost::is_any_of(","));
+        std::cout << "Message: " << in_msg << std::endl;
         
         if (result.size() > 2)
         {    
-            std::cout << "Message: " << in_msg << std::endl;
             hardware_serial_interface::SonarArray msg;
             msg.header.stamp = ros::Time::now();
             msg.sonar_front = std::stof(result.at(2).c_str());
@@ -123,10 +123,10 @@ void HardwareSerialInterfaceNode::calibrate()
             in_msg = this->port->readline();
             std::vector<std::string> result;
             boost::split(result, in_msg, boost::is_any_of(","));
+            std::cout << "Cal Message: " << in_msg;
 
             if (result.size() > 2)
             {    
-                std::cout << "Cal Message: " << in_msg;
                 // msg.sonar_front = std::stof(result.at(2).c_str());
                 left_range = std::stof(result.at(1).c_str());
                 right_range = std::stof(result.at(0).c_str());

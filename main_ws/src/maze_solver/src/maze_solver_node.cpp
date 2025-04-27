@@ -23,6 +23,7 @@ class MazeSolverNode
     int sonar_right;
     int sonar_left;
     bool recv;
+    bool turn_around_checks;
 
     void sonarCallback(const hardware_serial_interface::SonarArray::ConstPtr &msg);
 
@@ -55,6 +56,7 @@ MazeSolverNode::MazeSolverNode()
     this->steps_since_valid = 0;
     this->steps_since_correction = 999999;
     this->recv = false;
+    this->turn_around_checks = false;
 }
 
 MazeSolverNode::~MazeSolverNode()
@@ -68,6 +70,12 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     sonar_left = msg->sonar_left;
     sonar_right = msg->sonar_right;
     std::cout << msg->sonar_front << ", " << msg->sonar_left << ", " << msg->sonar_right << std::endl;
+
+    if (turn_around_checks)
+    {
+        recv = true;
+        return;
+    }
 
     int cmd = (msg->sonar_front  - 10) * 20;
     if (cmd < 0)
@@ -165,6 +173,8 @@ void MazeSolverNode::turnAround()
 {
     if (!turn_cooldown)
     {
+        turn_around_checks = true;
+
         hardware_serial_interface::StepperArray stepper_msg;
         stepper_msg.mode = 3;
         stepper_msg.steps = turn_steps*2;
@@ -229,6 +239,7 @@ void MazeSolverNode::turnAround()
         }
         turn_cooldown = 3;
     
+        turn_around_checks = false;
     }
     --turn_cooldown;
 }

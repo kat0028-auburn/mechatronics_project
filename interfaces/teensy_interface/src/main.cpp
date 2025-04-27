@@ -30,6 +30,7 @@ std::string range_csv;
 std::string motor_csv;
 int left_step_number = 0;
 int right_step_number = 0;
+bool on = false;
 
 void runSonars();
 void runMotors();
@@ -70,6 +71,35 @@ void runSonars()
     range_csv = std::to_string((int)distance_1) + "," + std::to_string((int)distance_2) + "," + std::to_string((int)distance_3);
     Serial.println(range_csv.c_str());
   }
+  else
+  {
+    std::string error_msg = "ERROR: ";
+    if (!checkValidMeasurement(distance_1))
+    {
+      error_msg += "1";
+    }
+    else if (!checkValidMeasurement(distance_2))
+    {
+      error_msg += "2";
+    }
+    else if (!checkValidMeasurement(distance_3))
+    {
+      error_msg += "3";
+    }
+    Serial.println(error_msg.c_str());
+  }
+
+  if (on)
+  {
+    digitalWrite(13, LOW);
+    on = !on;
+  }
+  else 
+  {
+    digitalWrite(13, HIGH);
+    on = !on;
+  }
+  delay(5);
 }
 
 bool checkValidMeasurement(const double& distance)
