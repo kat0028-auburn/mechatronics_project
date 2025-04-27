@@ -23,7 +23,7 @@ class HardwareSerialInterfaceNode
 
     serial::Serial* port;
     std::string motor_cmd_msg;
-    bool pause_serial_writer;
+    int pause_serial_writer;
     bool calibration_good;
     Calibrate *cal_tool;
 
@@ -39,7 +39,7 @@ HardwareSerialInterfaceNode::HardwareSerialInterfaceNode()
     std::string stepper_topic;
     std::string portname;
     int baudrate;
-    pause_serial_writer = true;
+    pause_serial_writer = 0;
     calibration_good = true;
 
     motor_cmd_msg = "0";
@@ -69,12 +69,12 @@ void HardwareSerialInterfaceNode::stepperCallback(const hardware_serial_interfac
         calibration_good = false;
         calibrate();
     }
-    else if (!pause_serial_writer && calibration_good)
+    else if ((pause_serial_writer > 1) && calibration_good)
     {
         motor_cmd_msg = std::to_string(msg->mode) + "," + std::to_string(msg->steps);
         std::cout << motor_cmd_msg << std::endl;
         port->write(motor_cmd_msg);
-        pause_serial_writer = true;
+        pause_serial_writer = 0;
     }
 
     // Check Calibration Status
@@ -99,7 +99,7 @@ void HardwareSerialInterfaceNode::checkPort()
             msg.sonar_right = std::stof(result.at(0).c_str());
             this->sonar_array_pub.publish(msg);
 
-            pause_serial_writer = false;
+            pause_serial_writer++;
         }
     }
     //this->port->write(this->motor_cmd_msg);
