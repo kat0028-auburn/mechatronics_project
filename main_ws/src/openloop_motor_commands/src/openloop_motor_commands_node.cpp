@@ -87,9 +87,8 @@ int main(int argc, char **argv)
     node.publishMessage(msg);*/
     hardware_serial_interface::StepperArray msg;
     msg.mode = 3;
-    msg.steps = 1135 * 8;
+    msg.steps = 1130 * 8;
     msg.mode = 4;
-    msg.steps = 20;
 
     node.publishMessage(msg);
 
