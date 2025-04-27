@@ -105,13 +105,13 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     {        
         goForward(cmd);
     }
-    else if(msg->sonar_right > side_tolerance)
-    {
-        turnRight();
-    }
     else if (msg->sonar_left > side_tolerance)
     {
         turnLeft();
+    }
+    else if(msg->sonar_right > side_tolerance)
+    {
+        turnRight();
     }
     else 
     {
@@ -275,7 +275,7 @@ bool MazeSolverNode::checkCalibration(const double &left_range, const double &ri
         heading_check = false;
     }
 
-    if (differnece > 5)
+    if (differnece > 3)
     {
         lateral_check = true;
         std::cout << "LATERAL TOLERANCE" << std::endl;
