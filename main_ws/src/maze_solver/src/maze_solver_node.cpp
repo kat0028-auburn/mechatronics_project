@@ -204,7 +204,7 @@ void MazeSolverNode::turnAround()
 
 
         stepper_msg.mode = 1;
-        stepper_msg.steps = 1000;
+        stepper_msg.steps = 500;
         motor_pub.publish(stepper_msg);
 
         recv = false;
