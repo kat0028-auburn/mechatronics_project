@@ -92,6 +92,7 @@ void HardwareSerialInterfaceNode::checkPort()
         
         if (result.size() > 2)
         {    
+            std::cout << "Message: " << in_msg << std::endl;
             hardware_serial_interface::SonarArray msg;
             msg.header.stamp = ros::Time::now();
             msg.sonar_front = std::stof(result.at(2).c_str());
