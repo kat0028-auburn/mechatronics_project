@@ -211,10 +211,10 @@ void MazeSolverNode::turnAround()
             return;
         }
 
+        std::cout << "Heading Val: " << sonar_left + sonar_right << std::endl;
+        std::cout << "Lateral Val: " << abs(sonar_right-sonar_left) << std::endl;
         if ((sonar_right + sonar_left > 30) || (abs(sonar_right - sonar_left) > 3))
         {
-            std::cout << "Heading Val: " << sonar_left + sonar_right << std::endl;
-            std::cout << "Lateral Val: " << abs(sonar_right-sonar_left) << std::endl;
             stepper_msg.mode = 1;
             stepper_msg.steps = 500;
             motor_pub.publish(stepper_msg);
