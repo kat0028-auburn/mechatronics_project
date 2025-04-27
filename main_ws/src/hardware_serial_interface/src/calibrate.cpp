@@ -1,6 +1,6 @@
 #include "calibrate.hpp"
 
-Calibrate::Calibrate(const int &turn_steps)
+Calibrate::Calibrate(const int &left_turn_steps, const int &right_turn_steps)
 {
     first_pass = false;
     second_pass = false;
@@ -12,7 +12,8 @@ Calibrate::Calibrate(const int &turn_steps)
     heading_calibrated = false;
     lateral_calibrated = false;
 
-    this->turn_steps = turn_steps;
+    this->left_turn_steps = left_turn_steps;
+    this->right_turn_steps = right_turn_steps;
 }
 
 Calibrate::~Calibrate()
@@ -70,14 +71,15 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
                 {
                     lateral_cal_mode = 1;
                     msg.mode = 3;
+                    msg.steps = left_turn_steps;  
                 }
                 else
                 {
                     lateral_cal_mode = 2;
                     msg.mode = 4;
+                    msg.steps = right_turn_steps;
                 }
                 
-                msg.steps = turn_steps;  
 
                 int avg = (left_range + right_range)/2;
                 lateral_error = abs(std::min(left_range, right_range)-avg);
@@ -102,13 +104,14 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
         {
             if (lateral_cal_mode == 1)
             {
+                msg.steps = right_turn_steps;
                 msg.mode = 4;
             }
             else
             {
                 msg.mode = 3;
+                msg.steps = left_turn_steps;
             }
-            msg.steps = turn_steps;
             lateral_phase = 0;
             
             lateral_calibrated = true;

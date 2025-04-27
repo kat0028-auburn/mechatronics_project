@@ -13,7 +13,8 @@ class MazeSolverNode
     ros::Subscriber sonar_sub;
     ros::Publisher motor_pub;
 
-    int turn_steps;
+    int left_turn_steps;
+    int right_turn_steps;
     int turn_cooldown;
     int front_tolerance;
     int side_tolerance;
@@ -45,7 +46,8 @@ MazeSolverNode::MazeSolverNode()
 
     this->n.param<std::string>("sonar_topic", sonar_topic, "sonar");
     this->n.param<std::string>("motor_topic", motor_topic, "motor");
-    this->n.param<int>("turn_steps", this->turn_steps, 1150);
+    this->n.param<int>("left_turn_steps", this->left_turn_steps, 1150);
+    this->n.param<int>("right_turn_steps", this->right_turn_steps, 1150);
     this->n.param<int>("front_tolerance", this->front_tolerance, 20);
     this->n.param<int>("side_tolerance", this->side_tolerance, 40);
 
@@ -147,7 +149,7 @@ void MazeSolverNode::turnLeft()
     {
         hardware_serial_interface::StepperArray stepper_msg;
         stepper_msg.mode = 3;
-        stepper_msg.steps = turn_steps;
+        stepper_msg.steps = left_turn_steps;
         stepper_msg.header.stamp = ros::Time::now();
         motor_pub.publish(stepper_msg);
         turn_cooldown = 3;
@@ -161,7 +163,7 @@ void MazeSolverNode::turnRight()
     {
         hardware_serial_interface::StepperArray stepper_msg;
         stepper_msg.mode = 4;
-        stepper_msg.steps = turn_steps;
+        stepper_msg.steps = right_turn_steps;
         stepper_msg.header.stamp = ros::Time::now();
         motor_pub.publish(stepper_msg);
         turn_cooldown = 3;
@@ -178,7 +180,7 @@ void MazeSolverNode::turnAround()
         std::cout << "Turn Around" << std::endl;
         hardware_serial_interface::StepperArray stepper_msg;
         stepper_msg.mode = 3;
-        stepper_msg.steps = turn_steps*2;
+        stepper_msg.steps = left_turn_steps*2;
         stepper_msg.header.stamp = ros::Time::now();
         motor_pub.publish(stepper_msg);
 
@@ -309,7 +311,7 @@ bool MazeSolverNode::checkCalibration(const double &left_range, const double &ri
             hardware_serial_interface::StepperArray msg;
             msg.mode = 7;
             msg.header.stamp = ros::Time::now();
-            msg.steps = turn_steps;
+            msg.steps = left_turn_steps;
             motor_pub.publish(msg);
             return true;
         }

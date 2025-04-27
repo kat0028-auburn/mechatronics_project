@@ -7,7 +7,7 @@
 class Calibrate
 {
     public:
-    Calibrate(const int &turn_steps);
+    Calibrate(const int &left_turn_steps, const int &right_turn_steps);
     ~Calibrate();
 
     bool getCalibration();
@@ -35,7 +35,8 @@ class Calibrate
 
     int lateral_cal_mode;
     int lateral_phase;
-    int turn_steps;
+    int left_turn_steps;
+    int right_turn_steps;
     double lateral_error;
 
     int findMinPoint();
