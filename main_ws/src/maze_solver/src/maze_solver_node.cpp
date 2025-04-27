@@ -178,6 +178,13 @@ void MazeSolverNode::turnAround()
         turn_around_checks = true;
 
         std::cout << "Turn Around" << std::endl;
+
+        recv = false;
+        while (!recv)
+        {
+            ros::spinOnce();
+        }
+        
         hardware_serial_interface::StepperArray stepper_msg;
         stepper_msg.mode = 3;
         stepper_msg.steps = left_turn_steps*2;
