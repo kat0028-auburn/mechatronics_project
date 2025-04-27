@@ -213,12 +213,14 @@ void MazeSolverNode::turnAround()
         {
             turn_cooldown = 0;
             turnLeft();
+            turn_around_checks = false;
             return;
         }
         else if(sonar_right > 25)
         {
             turn_cooldown = 0;
             turnRight();
+            turn_around_checks = false;
             return;
         }
 
