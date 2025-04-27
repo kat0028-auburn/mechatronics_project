@@ -69,30 +69,40 @@ void MazeSolverNode::sonarCallback(const hardware_serial_interface::SonarArray::
     sonar_right = msg->sonar_right;
     std::cout << msg->sonar_front << ", " << msg->sonar_left << ", " << msg->sonar_right << std::endl;
 
+    int cmd = (msg->sonar_front  - 10) * 20;
+    if (cmd < 0)
+    {
+        cmd = 20;
+    }
+    else if(cmd > 500)
+    {
+        cmd = 500;
+    }
+
     if (checkCalibration(msg->sonar_left, msg->sonar_right, msg->sonar_front))
     {
         std::cout << "Running Calibration" << std::endl;
     }
     else if (msg->sonar_front > (front_tolerance + 5) && msg->sonar_right < 11)
     {
-        shiftLeft((11-msg->sonar_right) * 50);
+        int shift = (11-msg->sonar_right) * 50;
+        if (shift > 2*cmd)
+        {
+            shift = 2*cmd;
+        }
+        shiftLeft(shift);
     }
     else if (msg->sonar_front > (front_tolerance + 5) && msg->sonar_left < 11)
     {
-        shiftRight((11-msg->sonar_left) * 50);
+        int shift = (11-msg->sonar_left) * 50;
+        if (shift > 2*cmd)
+        {
+            shift = 2*cmd;
+        }
+        shiftRight(shift);
     }
     else if (msg->sonar_front > front_tolerance)
-    {
-        int cmd = (msg->sonar_front  - 10) * 20;
-        if (cmd < 0)
-        {
-            cmd = 20;
-        }
-        else if(cmd > 500)
-        {
-            cmd = 500;
-        }
-        
+    {        
         goForward(cmd);
     }
     else if(msg->sonar_right > side_tolerance)
