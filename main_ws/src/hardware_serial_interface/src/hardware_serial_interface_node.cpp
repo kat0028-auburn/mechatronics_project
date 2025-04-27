@@ -33,7 +33,7 @@ class HardwareSerialInterfaceNode
 HardwareSerialInterfaceNode::HardwareSerialInterfaceNode()
 {
     this->n = ros::NodeHandle("~");
-    cal_tool = new Calibrate(1130);
+    cal_tool = new Calibrate(1140);
 
     std::string sonar_topic;
     std::string stepper_topic;
