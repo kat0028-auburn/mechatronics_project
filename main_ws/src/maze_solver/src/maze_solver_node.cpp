@@ -175,6 +175,7 @@ void MazeSolverNode::turnAround()
     {
         turn_around_checks = true;
 
+        std::cout << "Turn Around" << std::endl;
         hardware_serial_interface::StepperArray stepper_msg;
         stepper_msg.mode = 3;
         stepper_msg.steps = turn_steps*2;
