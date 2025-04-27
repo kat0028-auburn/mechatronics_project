@@ -170,7 +170,6 @@ void MazeSolverNode::turnAround()
         stepper_msg.steps = turn_steps*2;
         stepper_msg.header.stamp = ros::Time::now();
         motor_pub.publish(stepper_msg);
-        turn_cooldown = 3;
 
         //ros::Rate wait(0.2);
         //wait.sleep();
@@ -211,19 +210,24 @@ void MazeSolverNode::turnAround()
             turnRight();
             return;
         }
-
-
-        stepper_msg.mode = 1;
-        stepper_msg.steps = 500;
-        motor_pub.publish(stepper_msg);
-
-        recv = false;
-        while (!recv)
+        else if ((sonar_right + sonar_left > 30) || (abs(sonar_right - sonar_left) > 3))
         {
-            ros::spinOnce();
+            std::cout << "Heading Val: " << sonar_left + sonar_right << std::endl;
+            std::cout << "Lateral Val: " << abs(sonar_right-sonar_left) << std::endl;
+            stepper_msg.mode = 1;
+            stepper_msg.steps = 1000;
+            motor_pub.publish(stepper_msg);
+
+            recv = false;
+            while (!recv)
+            {
+                ros::spinOnce();
+            }
+            stepper_msg.mode = 7;
+            motor_pub.publish(stepper_msg);
         }
-        stepper_msg.mode = 7;
-        motor_pub.publish(stepper_msg);
+        turn_cooldown = 3;
+    
     }
     --turn_cooldown;
 }
