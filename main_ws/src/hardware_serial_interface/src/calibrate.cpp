@@ -93,7 +93,7 @@ hardware_serial_interface::StepperArray Calibrate::getMotorCmd()
         }
         else if (lateral_phase == 1)
         {
-            int shift = lateral_error * 100.0/0.9; // Was 0.95
+            int shift = lateral_error * 100.0/0.95; // Was 0.95
             msg.mode = 1;
             msg.steps = shift;
             lateral_phase = 2;
